@@ -216,8 +216,10 @@ Update(self, key, value)
 void
 DESTROY(self)
 	SV *	self
+    PREINIT:
+	SV *sviv = SvRV(self);
     CODE:
-	fprintf(stderr, "Ns_Set::DESTROY(%p) called: ", self);
+	fprintf(stderr, "Ns_Set::DESTROY(%p) called: ", sviv);
 	if(! NsSetIsNull(self))
 	{
 	  Ns_Set *tmp = NsSetInputMap(self, "Aolserver::Ns_Set", "self");

@@ -45,14 +45,19 @@ void NsSetMakeNull(SV *arg)
   NsSetStore(arg, NULL);
 }
 
+// SV *NsSetOutputmap(NsSet *var, char *class) {
+//  SV *r = newSV(); sv_setref_pv(r, class, var); return r; }
+
+
 SV *NsSetOutputMap(Ns_Set *var, char *class)
 {
   dTHX;
+
   SV *sviv = newSViv( (IV) var );
   SV *arg = newRV_noinc( sviv );
 
   sv_bless(arg, gv_stashpv(class, TRUE));
-  fprintf(stderr, "set p=%p wrapped as %s, ref at %p\n", var, class, arg);
+  fprintf(stderr, "set p=%p wrapped as %s, sviv at %p\n", var, class, sviv);
 
   return arg;
 }
