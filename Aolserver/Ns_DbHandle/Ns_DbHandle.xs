@@ -125,6 +125,28 @@ InterpretSqlFile(handle, filename)
     OUTPUT:
 	RETVAL
 
+int
+InSelectLoop(handlePerlRef)
+	SV *	handlePerlRef
+    CODE:
+	RETVAL = NsDbHandleIsInSelectLoop(handlePerlRef);
+    OUTPUT:
+	RETVAL
+
+int
+GetSelectRow(handlePerlRef)
+	SV *	handlePerlRef
+    CODE:
+	RETVAL = NsDbHandleGetSelectRowSet(handlePerlRef);
+    OUTPUT:
+	RETVAL
+
+void SetSelectRow(handlePerlRef, value)
+	SV *	handlePerlRef
+	int	value
+    CODE:
+	NsDbHandleStoreSelectRowSet(handlePerlRef, value);
+
 SV *
 Select(handlePerlRef, sql)
 	SV *	handlePerlRef
