@@ -10,5 +10,5 @@ Makefile.PL:
 	echo "    'VERSION_FROM' => 'Ns_Set.pm', # finds $VERSION" >> Makefile.PL
 	echo "    'LIBS'	=> [''],   # e.g., '-lm' " >> Makefile.PL
 	echo "    'DEFINE'	=> '',     # e.g., '-DHAVE_SOMETHING' " >> Makefile.PL
-	echo "    'INC'	=> '-I/usr/local/aolserver/include',     # e.g., '-I/usr/include/other' " >> Makefile.PL
+	echo "    'INC'	=> '-I$(NSHOME)/include',     # e.g., '-I/usr/include/other' " >> Makefile.PL
 	echo ");" >> Makefile.PL
