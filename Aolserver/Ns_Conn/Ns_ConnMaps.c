@@ -79,7 +79,7 @@ SV *NsConnOutputMap(Ns_Conn *var, char *class)
 
 // outputs the stored ref to the Ns_Set, takes the ref to the conn as input
 
-SV *GetHeaders(SV *connPerlRef)
+SV *NsConnGetHeaders(SV *connPerlRef)
 {
   dTHX;
   SV **hashValue = hv_fetch( (HV*)SvRV(connPerlRef), "headers", 7, FALSE);
@@ -90,7 +90,7 @@ SV *GetHeaders(SV *connPerlRef)
 
 // outputs the stored ref to the Ns_Set, takes the ref to the conn as input
 
-SV *GetOutputHeaders(SV *connPerlRef)
+SV *NsConnGetOutputHeaders(SV *connPerlRef)
 {
   dTHX;
   SV **hashValue = 
@@ -107,7 +107,7 @@ SV *GetOutputHeaders(SV *connPerlRef)
 
 // outputs the stored ref to the Ns_Request, takes the ref to the conn as input
 
-SV *GetRequest(SV *connPerlRef)
+SV *NsConnGetRequest(SV *connPerlRef)
 {
   dTHX;
   SV **hashValue = 

@@ -10,8 +10,8 @@
 Ns_Conn *NsConnInputMap(SV *arg);
 SV *NsConnOutputMap(Ns_Conn *var, char *class);
 
-SV *GetHeaders(SV *connPerlRef);
-SV *GetOutputHeaders(SV *connPerlRef);
-SV *GetRequest(SV *connPerlRef);
+SV *NsConnGetHeaders(SV *connPerlRef);
+SV *NsConnGetOutputHeaders(SV *connPerlRef);
+SV *NsConnGetRequest(SV *connPerlRef);
 
 #endif

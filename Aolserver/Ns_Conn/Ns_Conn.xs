@@ -78,13 +78,11 @@ newReferral(class, conn)
     OUTPUT:
         RETVAL
 
-# test funcs
-
 SV *
 Request(connPerlRef)
 	SV *	connPerlRef
     CODE:
-	RETVAL = GetRequest(connPerlRef);
+	RETVAL = NsConnGetRequest(connPerlRef);
     OUTPUT:
 	RETVAL
 
@@ -123,7 +121,7 @@ SV *
 OutputHeaders(connPerlRef)
 	SV *	connPerlRef
     CODE:
-	RETVAL = GetOutputHeaders(connPerlRef);
+	RETVAL = NsConnGetOutputHeaders(connPerlRef);
     OUTPUT:
 	RETVAL
 
@@ -479,6 +477,9 @@ FlushContent(conn)
     OUTPUT:
 	RETVAL
 
+# THis is special because the docs say to not allow the setP to be
+# altered or deallocated. So, we copy it.
+
 Ns_Set *
 GetQuery(conn)
 	Ns_Conn *	conn
@@ -524,7 +525,7 @@ SV *
 Headers(connPerlRef)
 	SV *	connPerlRef
     CODE:
-	RETVAL = GetHeaders(connPerlRef);
+	RETVAL = NsConnGetHeaders(connPerlRef);
     OUTPUT:
 	RETVAL
 
@@ -736,5 +737,5 @@ WriteConn(conn, buf, len)
 #	Ns_Conn *	conn
 #    CODE:
 #	/* when a way to create connections is discovered ( and */
-#        /* put into new() ), undo here.                          */
+#       /* put into new() ), undo here.                         */
 #	free(conn);
