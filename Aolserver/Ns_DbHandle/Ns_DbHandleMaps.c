@@ -154,9 +154,6 @@ void NsDbHandleStoreSelectRow(SV *dbHandlePerlRef, Ns_Set *selectRowSet)
 {
   dTHX;
 
-  LOG(StringF("NsDbHandleStoreSelectRow:"));
-  LOG(StringF("  - before doing sv_setsv"));
-
   hv_store
     (
       (HV*)SvRV(dbHandlePerlRef), 
@@ -165,8 +162,6 @@ void NsDbHandleStoreSelectRow(SV *dbHandlePerlRef, Ns_Set *selectRowSet)
       NsSetOutputMap(selectRowSet, "Aolserver::Ns_Set", perlDoesntOwn),
       0
     );
-
-  LOG(StringF("  - after doing sv_setsv"));
 }
 
 // Return true if we are in a select loop.
