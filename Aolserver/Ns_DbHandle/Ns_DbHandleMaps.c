@@ -59,13 +59,14 @@ SV *NsDbHandleOutputMap(Ns_DbHandle *var, char *class)
       0
     );
 
-  // create perl infrastructure for selectRowSet, make the ptr be initially 0
+  // create perl infrastructure for selectRowSet, 
+  // make the ptr be initially perl's "undef" val
   hv_store
     (
       hashReferent, 
       "selectRowSet", 
       12, 
-      NsSetOutputMap(NULL, "Aolserver::Ns_Set"),
+      NsSetOutputMap(&PL_sv_undef, "Aolserver::Ns_Set"),
       0
     );
 
