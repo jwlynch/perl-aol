@@ -118,12 +118,16 @@ InterpretSqlFile(handle, filename)
     OUTPUT:
 	RETVAL
 
-Ns_Set *
+SV *
 Select(handle, sql)
 	Ns_DbHandle *	handle
 	char *		sql
+    PREINIT:
+	Ns_Set *rowSet;
     CODE:
-	RETVAL = Ns_DbSelect(handle, sql);
+	rowSet = Ns_DbSelect(handle, sql);
+	StoreSelectRowSet(ST(0), rowSet);
+	RETVAL = GetSelectRowSet(ST(0));
     OUTPUT:
 	RETVAL
 
@@ -132,5 +136,6 @@ DESTROY(self)
 	Ns_DbHandle *	self
     CODE:
 	Ns_DbPoolPutHandle(self);
+	// PROBLEM: this never happens. WHY?
 	fprintf(stderr, "YES the destroy method gets called\n");
 
