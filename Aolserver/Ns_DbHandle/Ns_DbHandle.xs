@@ -29,8 +29,7 @@ new(class, pool)
 	RETVAL = Ns_DbPoolGetHandle(pool);
 	if (RETVAL)
 	{
-	    ST(0) = sv_newmortal();
-	    sv_setsv(ST(0), NsDbHandleOutputMap(RETVAL, class));
+	    ST(0) = sv_2mortal( NsDbHandleOutputMap(RETVAL, class) );
 	}
 	else
 	{
