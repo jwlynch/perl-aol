@@ -10,5 +10,6 @@ WriteMakefile(
     'LIBS'	=> [''],   # e.g., '-lm' 
     'DEFINE'	=> '',     # e.g., '-DHAVE_SOMETHING' 
     'INC'	=> '-I/usr/local/aolserver/include',     # e.g., '-I/usr/include/other' 
-    'TYPEMAPS'		=> \@theTypemaps,
+    'OBJECT'    => 'Ns_DbHandle.o Ns_DbHandleMaps.o',
+    'TYPEMAPS'	=> \@theTypemaps,
 );
