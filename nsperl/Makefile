@@ -1,5 +1,5 @@
 #
-# $Header: /home/jim/perl-aol-cvs-repo-backups/perl-aol/nsperl/Makefile,v 1.9 2002/11/26 19:50:11 jwl Exp $
+# $Header: /home/jim/perl-aol-cvs-repo-backups/perl-aol/nsperl/Makefile,v 1.10 2004/06/23 08:00:19 jwl Exp $
 #
 # nsexample --
 #
@@ -32,7 +32,7 @@ PERL_AOL = ..
 #  therein.
 #
 
-PLIBS   = $(LIBS) -L$(shell $(PERLCONFIG) --libs) -lperl
+PLIBS   = $(LIBS) -L$(shell $(PERLCONFIG) --libs)
 PINCLUDES = -I$(shell $(PERLCONFIG) --includes)
 
 CFLAGS += -I$(PERL_AOL)/include
@@ -42,6 +42,9 @@ CFLAGS += -I$(PERL_AOL)/Aolserver/Ns_DString
 CFLAGS += -I$(PERL_AOL)/Aolserver/Ns_Conn
 CFLAGS += -I$(PERL_AOL)/Aolserver/Ns_Request
 CFLAGS += -I$(PERL_AOL)/Aolserver/Ns_Db
+
+# location of installed perl modules (def'd in top level makefile)
+CFLAGS += -DPERLMODLIBDIR=\"$(PERLMODLIBDIR)\"
 
 #
 # Module name
@@ -61,7 +64,7 @@ HDRS     =
 #
 # Extra libraries
 #
-MODLIBS  =  $(shell $(PERLCONFIG) --archdir)/auto/DynaLoader/DynaLoader.a $(shell $(PERLCONFIG) --archdir)/CORE/$(LIBPERL) /usr/lib/libcrypt.a
+MODLIBS  =  $(shell $(PERLCONFIG) --libs) -lcrypt
 
 #
 # Compiler flags
