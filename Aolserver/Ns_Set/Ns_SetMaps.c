@@ -15,12 +15,20 @@
 
 #include "Ns_SetMaps.h"
 
-Ns_Set *NsSetInputMap(SV *arg)
+Ns_Set *NsSetInputMap(SV *arg, char *class, char *varName)
 {
   dTHX;
   Ns_Set *result = 0;
 
-  result = (Ns_Set *) SvIV( SvRV(arg) );
+  if (sv_derived_from($arg, class))
+    result = (Ns_Set *) SvIV( SvRV(arg) );
+  else
+    {
+      char errString[200];
+      
+      snprintf(errString, 200, "%s is not of type %s", varName, class);
+      croak(errString);
+    }
  
   return result;
 }

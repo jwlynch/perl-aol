@@ -7,7 +7,7 @@
 
 #include "/usr/local/aolserver/include/ns.h"
 
-Ns_Set *NsSetInputMap(SV *arg);
+Ns_Set *NsSetInputMap(SV *arg, char *class);
 int NsSetIsNull(SV *arg);
 void NsSetMakeNull(SV *arg);
 SV *NsSetOutputMap(Ns_Set *var, char *class);
