@@ -429,13 +429,68 @@ Examples
 
 =item GetSelectRow
 
+Overview
+
+Returns the stored perl infrastructure which (might) wrap around a database
+row represented as an Ns_Set structure.
+
+SYNTAX
+
+  <scalar Lvalue> = <handle object> -> GetSelectRow();
+
+ where <scalar Lvalue> is a perl Lvalue that can receive a scalar (which 
+                         will be an Ns_Set maybe containing the row), and
+       <handle object> is a reference to an Aolserver::Ns_DbHandle object.
+
+DESCRIPTION
+
+The perl wrapping of aolserver's Ns_DbHandle was designed to hold the row
+being iterated upon by Select() and GetRow(). The reason for the special
+handling, is that the docs said that the row structure is statically
+allocated, and no attempt should be made to alter or free it; normally,
+the Ns_Set perl wrapping would free it, so that had to be prevented.
+
+This function returns a pointer to the stored perl infrastructure of the
+database row, whose lifespan is the same as the database handle wrapping.
+
+NOTE the existance of SetSelectRow; it alters a DIFFERENT pointer. Please
+see its docs for details.
+
 =item InterpretSqlFile
 
 =item InSelectLoop
 
+Overview
+
+Returns a true value, if Select() has been successfully been called on the
+handle, and there may be more rows available which match the select
+criteria. Returns false if it's not possible to get more rows with GetRow().
+
+SYNTAX
+
+  <scalar Lvalue> = 
+       <handle object> -> InSelectLoop();
+
+ where <scalar Lvalue> is a perl Lvalue that can receive a scalar 
+                         (which will be a true/false value), and
+       <handle object> is a reference to an Aolserver::Ns_DbHandle object.
+
 =item Select
 
 =item SetSelectRow
+
+Overview
+
+Stores a pointer to an un-wrapped C structure Ns_Set into the stored perl
+infrastructure representing the select row to perl. Not normally used 
+other than by developers of perl-aol.
+
+SYNTAX
+
+       <handle object> -> SetSelectRow( <Ns_Set pointer> );
+
+ where <handle object> is a reference to an Aolserver::Ns_DbHandle object, and
+       <Ns_Set pointer> is a pointer to the C Ns_Set structure.
 
 =item DESTROY
 
@@ -443,8 +498,7 @@ Examples
 
 =head1 BUGS
 
-perl won't dispose of the Ns_DbHandle. You have to call the DESTROY() method
-yourself; not doing so causes a handle to leak.
+None presently known; the handle leak bug has been solved.
 
 =head1 AUTHOR
 
