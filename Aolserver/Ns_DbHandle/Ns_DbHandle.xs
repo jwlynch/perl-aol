@@ -154,15 +154,26 @@ Flush(handlePerlRef)
 	RETVAL
 
 int
-GetRow(handlePerlRef, row)
+GetRow(handlePerlRef, rowPerlRef)
 	SV *	handlePerlRef
-	Ns_Set *	row
+	SV *	rowPerlRef
     PREINIT:
 	Ns_DbHandle *handle = NsDbHandleInputMap(handlePerlRef);
+	Ns_Set *row = 
+	    NsSetInputMap
+		(
+		    rowPerlRef, 
+		    "Aolserver::Ns_Set", 
+		    "rowPerlRef"
+		);
     CODE:
 	RETVAL = NS_ERROR;
 
-	if(NsDbHandleIsInSelectLoop(handlePerlRef))
+	if
+	  (
+	    NsDbHandleIsInSelectLoop(handlePerlRef) &&
+	    NsDbHandleSameAsSelectRow(handlePerlRef, rowPerlRef)
+	  )
 	  {
 	    RETVAL = Ns_DbGetRow(handle, row);
 
