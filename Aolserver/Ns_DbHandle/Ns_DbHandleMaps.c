@@ -17,8 +17,8 @@
 #include "perl.h"
 #include "XSUB.h"
 
-#include "../../Aolserver/Ns_Set/Ns_SetMaps.h"
-#include "../../Aolserver/Ns_DString/Ns_DStringMaps.h"
+#include "../Ns_Set/Ns_SetMaps.h"
+#include "../Ns_DString/Ns_DStringMaps.h"
 
 #include <nsthread.h>
 #include <tcl.h>
@@ -101,7 +101,7 @@ SV *NsDbHandleOutputMap(Ns_DbHandle *var, char *class)
 }
 
 // outputs the stored ref to the Ns_Set which is output from Ns_DbSelect 
-// !!or!! NULL if no select active; takes the ref to the dbhandle as input
+// !!or!! undef if no select active; takes the ref to the dbhandle as input
 
 SV *NsDbHandleGetSelectRow(SV *dbHandlePerlRef)
 {

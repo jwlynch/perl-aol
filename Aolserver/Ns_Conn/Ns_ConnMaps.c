@@ -10,7 +10,8 @@
 #include "perl.h"
 #include "XSUB.h"
 
-#include "../../Aolserver/Ns_Set/Ns_SetMaps.h"
+#include "../Ns_Set/Ns_SetMaps.h"
+#include "../Ns_Request/Ns_RequestMaps.h"
 
 #include <nsthread.h>
 #include <tcl.h>

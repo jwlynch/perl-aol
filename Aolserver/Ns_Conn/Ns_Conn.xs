@@ -11,6 +11,7 @@
 #include "Ns_ConnMaps.h"
 #include "../Ns_DString/Ns_DStringMaps.h"
 #include "../Ns_Set/Ns_SetMaps.h"
+#include "../Ns_Request/Ns_RequestMaps.h"
 
 static int
 not_here(char *s)
