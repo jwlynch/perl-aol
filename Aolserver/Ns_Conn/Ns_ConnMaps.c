@@ -30,7 +30,7 @@ Ns_Conn *NsConnInputMap(SV *arg)
   if(hashValue)
     result = (Ns_Conn *) SvIV( *hashValue );
  
-  return hashValueresult;
+  return result;
 }
 
 SV *NsConnOutputMap(Ns_Conn *var, char *class)
