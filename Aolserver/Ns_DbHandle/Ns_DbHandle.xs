@@ -29,8 +29,8 @@ new(class, pool)
 	RETVAL = Ns_DbPoolGetHandle(pool);
 	if (RETVAL)
 	{
-	    ST(0) = 
-		sv_mortalcopy( NsDbHandleOutputMap(RETVAL, class) );
+	    ST(0) = sv_newmortal();
+	    sv_setsv(ST(0), NsDbHandleOutputMap(RETVAL, class));
 	}
 	else
 	{
@@ -178,8 +178,6 @@ DESTROY(handlePerlRef)
     PREINIT:
 	Ns_DbHandle *handle = NsDbHandleInputMap(handlePerlRef);
     CODE:
-	fprintf(stderr, "YES the destroy method gets called\n");
-
 	if(NsDbHandleIsInSelectLoop(handlePerlRef))
 	{
 	  NsDbHandleStoreSelectRow(handlePerlRef, (Ns_Set *) NULL);
@@ -187,5 +185,4 @@ DESTROY(handlePerlRef)
 	}
 
 	Ns_DbPoolPutHandle(handle);
-	// PROBLEM: this never happens. WHY?
 

@@ -54,7 +54,7 @@ SV *NsDbHandleOutputMap(Ns_DbHandle *var, char *class)
 {
   dTHX;
   HV *hashReferent = newHV();
-  SV *arg = newRV_inc( (SV *) hashReferent);
+  SV *arg = newRV_noinc( (SV *) hashReferent);
 
   hv_store
     (
