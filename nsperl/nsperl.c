@@ -34,7 +34,7 @@
  *
  */
 
-static const char *RCSID = "@(#) $Header: /home/jim/perl-aol-cvs-repo-backups/perl-aol/nsperl/nsperl.c,v 1.12 2000/12/26 23:26:54 jwl Exp $, compiled: " __DATE__ " " __TIME__;
+static const char *RCSID = "@(#) $Header: /home/jim/perl-aol-cvs-repo-backups/perl-aol/nsperl/nsperl.c,v 1.13 2000/12/26 23:43:45 jwl Exp $, compiled: " __DATE__ " " __TIME__;
 
 #include "ns.h"
 
@@ -276,14 +276,14 @@ int do_perl(void *context, Ns_Conn *conn)
 	    SV *conPerlRef = NsConnOutputMap(conn, "Aolserver::Ns_Conn");
 	    SV *varPtr = get_sv("Aolserver::Ns_Conn::theConn", TRUE | GV_ADDMULTI);
 
-fprintf(stderr, "var    => %ld\n", SvREFCNT(varPtr));
+NsConnPrintRefCounts(varPtr);
 	    sv_setsv
 	      (
 	        varPtr,
 	        conPerlRef
 	      );
 	    SvREFCNT_inc(varPtr);
-fprintf(stderr, "var b4 => %ld\n", SvREFCNT(varPtr));
+NsConnPrintRefCounts(varPtr);
             SvREFCNT_dec(conPerlRef); /* done with this */
 	  }
 #endif
