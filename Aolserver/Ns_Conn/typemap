@@ -1,0 +1,13 @@
+Ns_Conn *	T_Ns_Conn
+
+INPUT
+T_Ns_Conn
+	if (sv_derived_from($arg, \"Aolserver::Ns_Conn\")) {
+ 	    $var = NsConnInputMap($arg);
+	}
+	else
+	    croak(\"$var is not of type Aolserver::Ns_Conn\")
+
+OUTPUT
+T_Ns_Conn
+	$arg = NsConnOutputMap($var, \"Aolserver::Ns_Conn\");
