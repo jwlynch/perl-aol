@@ -22,3 +22,12 @@ stamp-nsperl: nsperl/nsperl.so
 
 nsperl/nsperl.so: 
 	cd nsperl; $(MAKE)
+
+
+install: all
+	for i in $(PERLMODULES); \
+	do \
+	    (cd Aolserver/$$i; \
+	     $(MAKE) install) ; \
+	done
+	cd nsperl; $(MAKE) install
