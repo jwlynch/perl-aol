@@ -69,6 +69,7 @@ SV *NsDbHandleOutputMap(Ns_DbHandle *var, char *class)
   // create perl infrastructure for selectRowSet, 
   // make the ptr be initially a (Ns_Set*) NULL
   /**/tmp = NsSetOutputMap( (Ns_Set*) NULL, "Aolserver::Ns_Set");
+  /**/fprintf(stderr, "refcnt of the select row is %d\n", SvREFCNT(tmp));
   hv_store
     (
       hashReferent, 
