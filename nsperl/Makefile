@@ -1,5 +1,5 @@
 #
-# $Header: /home/jim/perl-aol-cvs-repo-backups/perl-aol/nsperl/Makefile,v 1.8 2000/12/24 03:34:29 jwl Exp $
+# $Header: /home/jim/perl-aol-cvs-repo-backups/perl-aol/nsperl/Makefile,v 1.9 2002/11/26 19:50:11 jwl Exp $
 #
 # nsexample --
 #
@@ -35,6 +35,7 @@ PERL_AOL = ..
 PLIBS   = $(LIBS) -L$(shell $(PERLCONFIG) --libs) -lperl
 PINCLUDES = -I$(shell $(PERLCONFIG) --includes)
 
+CFLAGS += -I$(PERL_AOL)/include
 CFLAGS += $(shell $(PERLCONFIG) --cflags)
 CFLAGS += -I$(PERL_AOL)/Aolserver/Ns_Set
 CFLAGS += -I$(PERL_AOL)/Aolserver/Ns_DString
@@ -50,7 +51,7 @@ MOD      =  nsperl.so
 #
 # Objects to build
 #
-OBJS     =  nsperl.o Ns_ConnMaps.o Ns_SetMaps.o Ns_RequestMaps.o 
+OBJS     =  nsperl.o Ns_ConnMaps.o Ns_SetMaps.o Ns_RequestMaps.o $(PERL_AOL)/logging/logging.o
 
 #
 # Header files
@@ -78,3 +79,7 @@ Ns_SetMaps.o: $(PERL_AOL)/Aolserver/Ns_Set/Ns_SetMaps.c
 
 Ns_RequestMaps.o: $(PERL_AOL)/Aolserver/Ns_Request/Ns_RequestMaps.c
 	gcc $(CFLAGS) -c -o Ns_RequestMaps.o $(PERL_AOL)/Aolserver/Ns_Request/Ns_RequestMaps.c
+
+$(PERL_AOL)/logging/logging.o:
+	cd $(PERL_AOL)/logging/ && $(MAKE)
+

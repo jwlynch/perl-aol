@@ -34,7 +34,7 @@
  *
  */
 
-static const char *RCSID = "@(#) $Header: /home/jim/perl-aol-cvs-repo-backups/perl-aol/nsperl/nsperl.c,v 1.15 2000/12/27 02:13:19 jwl Exp $, compiled: " __DATE__ " " __TIME__;
+static const char *RCSID = "@(#) $Header: /home/jim/perl-aol-cvs-repo-backups/perl-aol/nsperl/nsperl.c,v 1.16 2002/11/26 19:50:11 jwl Exp $, compiled: " __DATE__ " " __TIME__;
 
 #include "ns.h"
 
@@ -44,7 +44,8 @@ static const char *RCSID = "@(#) $Header: /home/jim/perl-aol-cvs-repo-backups/pe
 #include <XSUB.h>
 #include <proto.h>
 
-#include <Ns_ConnMaps.h>
+#include "Ns_ConnMaps.h"
+#include "logging.h"
 
 /*
  * The Ns_ModuleVersion variable is required.
@@ -119,67 +120,6 @@ xs_init(pTHX)
 /*
  *----------------------------------------------------------------------
  *
- * loggit --
- *
- *	Logs a message to a log file.
- *	
- *
- * Results:
- *	none: void func.
- *
- * Side effects:
- *	appends msg to file.
- *
- */
-
-#define LOGPATH "/web/nusvr324/www/perl/log"
-
-void
-p_loggit(char *file, int line, char *msg)
-{
-  FILE *log = fopen(LOGPATH, "a");
-
-  if(log)
-    {
-      fprintf(log, "%s:%d: %s\n", file, line, msg);
-      fclose(log);
-    }
-}
-
-#define loggit(m) p_loggit(__FILE__, __LINE__, m)
-
-
-/*
- *----------------------------------------------------------------------
- *
- * trunclog --
- *
- *	Erases log file.
- *	
- *
- * Results:
- *	none: void func.
- *
- * Side effects:
- *	none
- *
- */
-
-void
-trunclog(void)
-{
-  FILE *log = fopen(LOGPATH, "w");
-
-  if(log)
-    {
-      fclose(log);
-    }
-}
-
-
-/*
- *----------------------------------------------------------------------
- *
  * do_perl --
  *
  *	Handle *.perl urls by creating a new perl interpreter, feeding 
@@ -213,11 +153,6 @@ trunclog(void)
 
 #include "../Aolserver/Ns_Conn/Ns_ConnMaps.h"
 
-void Wput(const char *it, Ns_Conn *conn)
-{
-  loggit(it);
-}
-
 #define NEVER 0
 
 int do_perl(void *context, Ns_Conn *conn)
@@ -226,8 +161,6 @@ int do_perl(void *context, Ns_Conn *conn)
   char *hServer = Ns_ConnServer(conn);
   char *scriptPathP;
   Ns_Request *theReq = conn->request;
-
-  trunclog();
 
   /*
    * if it's a file, assume it's a perl script and run it.

@@ -6,6 +6,7 @@
 #include "XSUB.h"
 
 #include "Ns_SetMaps.h"
+#include "logging.h"
 
 #include <nsthread.h>
 #include <tcl.h>
@@ -57,7 +58,7 @@ SV *NsSetOutputMap(Ns_Set *var, char *class)
   SV *arg = newRV_noinc( sviv );
 
   sv_bless(arg, gv_stashpv(class, TRUE));
-  fprintf(stderr, "set p=%p wrapped as %s, sviv at %p\n", var, class, sviv);
+  LOG(StringF("set p=%p wrapped as %s, sviv at %p\n", var, class, sviv));
 
   return arg;
 }
