@@ -1,0 +1,16 @@
+use Config;
+use ExtUtils::Embed;
+
+
+if ($ARGV[0] eq  "--includes")
+{
+    print "$Config{archlib}/CORE\n";
+}
+elsif ($ARGV[0] eq  "--libs")
+{
+    print ldopts;
+}
+elsif ($ARGV[0] eq  "--cflags")
+{
+    print ccopts;
+}
