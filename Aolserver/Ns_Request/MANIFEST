@@ -1,0 +1,8 @@
+Changes
+MANIFEST
+Makefile.PL
+Ns_Request.pm
+Ns_Request.xs
+test.pl
+Ns_RequestMaps.c
+Ns_RequestMaps.h
