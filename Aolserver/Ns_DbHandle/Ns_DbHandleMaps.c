@@ -37,7 +37,7 @@ int NsDbHandleIsNull(SV *arg)
   return NsDbHandleInputMap(arg) == NULL;
 }
 
-void MakeNsDbHandleNull(SV *arg)
+void NsDbHandleMakeNull(SV *arg)
 {
   dTHX;
   
@@ -94,7 +94,7 @@ SV *NsDbHandleOutputMap(Ns_DbHandle *var, char *class)
 // outputs the stored ref to the Ns_Set which is output from Ns_DbSelect 
 // !!or!! NULL if no select active; takes the ref to the dbhandle as input
 
-SV *GetSelectRow(SV *dbHandlePerlRef)
+SV *NsDbHandleGetSelectRow(SV *dbHandlePerlRef)
 {
   dTHX;
   SV **hashValue = 
@@ -122,15 +122,16 @@ SV *GetSelectRow(SV *dbHandlePerlRef)
 //       and this would put us in a select loop.
 //
 //   If we are not, store a NULL where the pointer to the perl infrastructure
-//   otherwise would have been.
+//   otherwise would have been. If a row was here, make sure to break the
+//   link to it from the perl infrastructure.
 //
 //       Having gotten the last row and calling GetRow "one more time"
 //       should make this null. So should the DESTROY method as well as
 //       Cancel and Flush. ALSO, calling ExecDML, GetOneRow or GetOneRowAtMost
-//       on the same handle as one which is in a select loop is an error,
-//       and causes a Flush which should also make this null.
+//       on a handle which is in a select loop is an error, and causes a Flush
+//       which should also make this null.
 
-void StoreSelectRow(SV *dbHandlePerlRef, Ns_Set *selectRowSet)
+void NsDbHandleStoreSelectRow(SV *dbHandlePerlRef, Ns_Set *selectRowSet)
 {
   dTHX;
   SV *selectRowSetPerlRef = NULL;
@@ -141,6 +142,11 @@ void StoreSelectRow(SV *dbHandlePerlRef, Ns_Set *selectRowSet)
   if(selectRowSet)
     {
       selectRowSetPerlRef = NsSetOutputMap(selectRowSet, "Aolserver::Ns_Set");
+    }
+  else
+    {
+      // break any link to existing row
+      
     }
 
   // ....Otherwise, don't bother. The stored value will be NULL and not a set.
@@ -158,8 +164,8 @@ void StoreSelectRow(SV *dbHandlePerlRef, Ns_Set *selectRowSet)
 
 //// outputs the stored ref to the Ns_Set, takes the ref to the conn as input
 //
-//SV *GetOutputHeaders(SV *connPerlRef);
-//SV *GetOutputHeaders(SV *connPerlRef)
+//SV *NsDbHandleGetOutputHeaders(SV *connPerlRef);
+//SV *NsDbHandleGetOutputHeaders(SV *connPerlRef)
 //{
 //  dTHX;
 //  SV **hashValue = 
@@ -176,8 +182,8 @@ void StoreSelectRow(SV *dbHandlePerlRef, Ns_Set *selectRowSet)
 
 //// outputs the stored ref to the Ns_Request, takes the ref to the conn as input
 //
-//SV *GetRequest(SV *connPerlRef);
-//SV *GetRequest(SV *connPerlRef)
+//SV *NsDbHandleGetRequest(SV *connPerlRef);
+//SV *NsDbHandleGetRequest(SV *connPerlRef)
 //{
 //  dTHX;
 //  SV **hashValue = 
