@@ -28,7 +28,7 @@ int NsSetIsNull(SV *arg)
   return NsSetInputMap(arg) == NULL;
 }
 
-void MakeNsSetNull(SV *arg)
+void NsSetMakeNull(SV *arg)
 {
   dTHX;
   
