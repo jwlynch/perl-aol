@@ -55,6 +55,7 @@ SV *NsDbHandleOutputMap(Ns_DbHandle *var, char *class)
   dTHX;
   HV *hashReferent = newHV();
   SV *arg = newRV_inc( (SV *) hashReferent);
+  /**/SV *tmp;
 
   hv_store
     (
@@ -67,12 +68,14 @@ SV *NsDbHandleOutputMap(Ns_DbHandle *var, char *class)
 
   // create perl infrastructure for selectRowSet, 
   // make the ptr be initially a (Ns_Set*) NULL
+  /**/tmp = NsSetOutputMap( (Ns_Set*) NULL, "Aolserver::Ns_Set");
   hv_store
     (
       hashReferent, 
       "selectRowSet", 
       12, 
-      NsSetOutputMap( (Ns_Set*) NULL, "Aolserver::Ns_Set"),
+      /**/ //NsSetOutputMap( (Ns_Set*) NULL, "Aolserver::Ns_Set"),
+      /**/tmp,
       0
     );
 

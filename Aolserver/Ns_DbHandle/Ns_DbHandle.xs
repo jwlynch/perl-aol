@@ -133,7 +133,7 @@ InSelectLoop(handlePerlRef)
     OUTPUT:
 	RETVAL
 
-int
+SV *
 GetSelectRow(handlePerlRef)
 	SV *	handlePerlRef
     CODE:
