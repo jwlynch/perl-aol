@@ -12,5 +12,6 @@ int NsSetIsNull(SV *arg);
 void NsSetMakeNull(SV *arg);
 SV *NsSetOutputMap(Ns_Set *var, char *class);
 void NsSetStore(SV *setPerlRef, Ns_Set *set);
+void NsSetSwap(SV *set1, SV *set2);
 
 #endif

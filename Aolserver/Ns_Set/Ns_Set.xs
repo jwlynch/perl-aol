@@ -20,6 +20,13 @@ MODULE = Aolserver::Ns_Set		PACKAGE = Aolserver::Ns_Set
 
 # perl module encapsulating Aolserver's Ns_Set
 
+void
+SwapWith(set1, set2)
+	SV *	set1
+	SV *	set2
+    CODE:
+	NsSetSwap(set1, set2);
+
 
 Ns_Set *
 new(class)
