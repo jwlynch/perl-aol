@@ -40,7 +40,7 @@ void NsConnPrintRefCounts(SV *connPerlRef)
   (
     StringF
     (
-      "refcounts: ref: %ld, hash: %ld, conn: %ld, hdrs: %ld, oHdrs: %ld, req: %ld\n",
+      "refcounts: ref: %ld, hash: %ld, conn: %ld, hdrs: %ld, oHdrs: %ld, req: %ld",
       SvREFCNT(connPerlRef),
       SvREFCNT(hashReferent),
       theConnIV ? SvREFCNT(theConnIV) : -99L,
@@ -60,7 +60,7 @@ Ns_Conn *NsConnInputMap(SV *arg, char *class, char *varName)
     {
       SV **hashValue = hv_fetch( (HV*)SvRV(arg), "theNs_Conn", 10, FALSE);
       
-      LOG(StringF("NsConnInputMap: (extracting C stuff from perl stuff)\n"));
+      LOG(StringF("NsConnInputMap: (extracting C stuff from perl stuff)"));
       NsConnPrintRefCounts(arg);
       
       if(hashValue)
@@ -160,10 +160,7 @@ int NsConnOwnedP(SV *connPerlRef)
   SV *perlOwns = ((hashValue != NULL) ? *hashValue : &PL_sv_yes);
   int result = 0;
 
-  if(perlOwns == &PL_sv_yes)
-    result = 1;
-  else 
-    result = 0;
+  result = (perlOwns == &PL_sv_yes);
 
   return result;
 }
@@ -180,7 +177,7 @@ SV *NsConnGetHeaders(SV *connPerlRef)
     (
       StringF
         (
-          "NsConnGetHeaders: hashValue = %p; result = %p\n", 
+          "NsConnGetHeaders: hashValue = %p; result = %p", 
 	  hashValue, 
 	  result
         )

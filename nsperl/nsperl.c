@@ -34,7 +34,7 @@
  *
  */
 
-static const char *RCSID = "@(#) $Header: /home/jim/perl-aol-cvs-repo-backups/perl-aol/nsperl/nsperl.c,v 1.18 2002/12/05 02:28:06 jwl Exp $, compiled: " __DATE__ " " __TIME__;
+static const char *RCSID = "@(#) $Header: /home/jim/perl-aol-cvs-repo-backups/perl-aol/nsperl/nsperl.c,v 1.19 2002/12/06 23:07:19 jwl Exp $, compiled: " __DATE__ " " __TIME__;
 
 #include "ns.h"
 
@@ -188,25 +188,6 @@ int do_perl(void *context, Ns_Conn *conn)
 	  perl_parse(aTHX_ xs_init, 2, embedding, NULL);
 	  /* add lines to store conn (an Ns_Conn *) in the perl interp */
 
-#ifdef SKIP
-	  {
-	    SV *theConnVar = get_sv("Aolserver::Ns_Conn::theConn", TRUE);
-	    SV **hashValue;
-	    HV *theStash;
-	    GV *theConnGlob;
-
-	    sv_setsv
-	      (
-	        theConnVar,
-	        NsConnOutputMap(conn, "Aolserver::Ns_Conn")
-	      );
-
-	    theStash = SvSTASH(SvRV(theConnVar));
-	    hashValue = hv_fetch(theStash, "theConn", 7, FALSE);
-	    theConnGlob = (GV *) *hashValue;
-	    GvMULTI_on(theConnGlob);
-	  }
-#else
 	  {
 	    SV *varPtr = get_sv("Aolserver::Ns_Conn::theConn", TRUE | GV_ADDMULTI);
 
@@ -222,32 +203,37 @@ int do_perl(void *context, Ns_Conn *conn)
 	        varPtr,
 	        connPerlRef
 	      );
-	    //SvREFCNT_inc( SvRV(varPtr) );
 
-LOG(StringF("varPtr => %ld (expect 1)\n", SvREFCNT(varPtr)));
-LOG(StringF("connPerlRef => %ld (expect 1)\n", SvREFCNT(connPerlRef)));
-LOG(StringF("%%{varPtr} => %ld (expect 2)\n", SvREFCNT(SvRV(varPtr))));
+LOG(StringF("varPtr => %ld (expect 1)", SvREFCNT(varPtr)));
+LOG(StringF("connPerlRef => %ld (expect 1)", SvREFCNT(connPerlRef)));
+LOG(StringF("%%{varPtr} => %ld (expect 2)", SvREFCNT(SvRV(varPtr))));
+LOG(StringF("(So, we decrement that refcount so it's one)"));
 
             SvREFCNT_dec(SvRV(varPtr));
 
-LOG(StringF("%%{varPtr} => %ld (expect 1)\n", SvREFCNT(SvRV(varPtr))));
-LOG(StringF("connPerlRef => %ld (hope 1)\n", SvREFCNT(connPerlRef)));
+LOG(StringF("%%{varPtr} => %ld (expect 1)", SvREFCNT(SvRV(varPtr))));
+LOG(StringF("connPerlRef => %ld (hope 1)", SvREFCNT(connPerlRef)));
 	  }
-#endif
 
-	  LOG(StringF("before running perl interp\n"));
+	  LOG(StringF("before running perl interp"));
+
 	  perl_run(aTHX);
-	  LOG(StringF("after running perl interp\n"));
+
+	  LOG(StringF("after running perl interp"));
+
 	  perl_destruct(aTHX);
-	  LOG(StringF("after destroying perl interp\n"));
+
+	  LOG(StringF("after destroying perl interp"));
+
 	  perl_free(aTHX);
-	  LOG(StringF("after freeing perl interp\n"));
+
+	  LOG(StringF("after freeing perl interp"));
 	  
 	  if(! Ns_ConnContentSent(conn))
 	    {
 	      Ns_DString sendMe;
 	      char *sendStr;
-	      /* the perl interpreter could not be allocated */
+	      /* script failed to return browser content */
 	      
 	      Ns_DStringInit(&sendMe);
 	      

@@ -16,20 +16,20 @@ Ns_DString *
 new(class)
 	char *		class
     CODE:
-        LOG(StringF("Ns_DString new:\n"));
+        LOG(StringF("Ns_DString new:"));
 	RETVAL = malloc(sizeof(Ns_DString));
 	if (RETVAL)
 	{
-            LOG(StringF("  - allocated, loc is %p\n", RETVAL));
+            LOG(StringF("  - allocated, loc is %p", RETVAL));
 	    Ns_DStringInit(RETVAL);
-            LOG(StringF("  - initialized by Ns_DStringInit\n"));
+            LOG(StringF("  - initialized by Ns_DStringInit"));
 
 	    ST(0) = sv_newmortal();
             sv_setsv(ST(0), NsDStringOutputMap(RETVAL, class));
 	}
 	else
 	{
-            LOG(StringF("  - could not be allocated\n"));
+            LOG(StringF("  - could not be allocated"));
 	    ST(0) = &PL_sv_undef;
 	}
 
@@ -86,8 +86,8 @@ DESTROY(self)
 	Ns_DString *	self
 
     CODE:
-        LOG(StringF("Ns_DString at %p to be freed\n", self));
+        LOG(StringF("Ns_DString at %p to be freed", self));
     	Ns_DStringFree(self);
 	free(self);
-        LOG(StringF("Ns_DString at %p freed\n", self));
+        LOG(StringF("Ns_DString at %p freed", self));
 

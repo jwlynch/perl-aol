@@ -32,7 +32,6 @@ Ns_Set *NsSetInputMap(SV *arg, char *class, char *varName)
       SV **hashValue = hv_fetch( (HV*)SvRV(arg), "theNs_Set", 9, FALSE);
       
       LOG(StringF("NsSetInputMap: (extracting C stuff from perl stuff)"));
-      //NsConnPrintRefCounts(arg);
       
       if(hashValue)
 	result = (Ns_Set *) SvIV( *hashValue );
@@ -54,12 +53,12 @@ SV *NsSetOutputMap(Ns_Set *var, char *class, int perlOwns)
   HV *hashReferent = newHV();
   SV *arg = newRV_noinc( (SV *) hashReferent);
 
-  LOG(StringF("NsSetOutputMap: (creating new perl stuff for the C stuff)\n"));
+  LOG(StringF("NsSetOutputMap: (creating new perl stuff for the C stuff)"));
   LOG
     (
       StringF
         (
-          "  - overall ref at %p and its refcnt is %ld\n", 
+          "  - overall ref at %p and its refcnt is %ld", 
 	  arg, 
 	  SvREFCNT(arg)
 	)
@@ -68,7 +67,7 @@ SV *NsSetOutputMap(Ns_Set *var, char *class, int perlOwns)
     (
       StringF
         (
-          "  - hash at %p and its refcnt is %ld\n", 
+          "  - hash at %p and its refcnt is %ld", 
 	  hashReferent, 
 	  SvREFCNT(hashReferent)
 	)

@@ -43,11 +43,11 @@ new(class)
 	    /* but HOW?? so don't use new()       */
 
 	    ST(0) = sv_newmortal();
-            LOG(StringF("addr of newmortal is %p\n", ST(0)));
-            LOG(StringF("refcount of newmortal is %d\n", SvREFCNT(ST(0))));
+            LOG(StringF("addr of newmortal is %p", ST(0)));
+            LOG(StringF("refcount of newmortal is %d", SvREFCNT(ST(0))));
 	    sv_setref_pv(ST(0), class, (void*) RETVAL);
-            LOG(StringF("addr of ST(0) is %p\n", ST(0)));
-            LOG(StringF("refcount of ST(0) is %d\n", SvREFCNT(ST(0))));
+            LOG(StringF("addr of ST(0) is %p", ST(0)));
+            LOG(StringF("refcount of ST(0) is %d", SvREFCNT(ST(0))));
 	}
 	else
 	{
@@ -746,5 +746,4 @@ void
 DESTROY(connPerlRef)
 	SV *	connPerlRef
     CODE:
-        LOG(StringF("DESTROY Ns_Conn at %p\n", connPerlRef));
-	// would test perlOwns here, but...
+        LOG(StringF("DESTROY Ns_Conn at %p", connPerlRef));

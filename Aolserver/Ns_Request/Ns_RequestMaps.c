@@ -52,7 +52,7 @@ SV *NsRequestOutputMap(Ns_Request *var, char *class, int perlOwns)
     (
       StringF
         (
-          "  - overall ref at %p and its refcnt is %ld\n", 
+          "  - overall ref at %p and its refcnt is %ld", 
 	  arg, 
 	  SvREFCNT(arg)
 	)
@@ -61,7 +61,7 @@ SV *NsRequestOutputMap(Ns_Request *var, char *class, int perlOwns)
     (
       StringF
         (
-          "  - hash at %p and its refcnt is %ld\n", 
+          "  - hash at %p and its refcnt is %ld", 
 	  hashReferent, 
 	  SvREFCNT(hashReferent)
 	)
@@ -97,10 +97,7 @@ int NsRequestOwnedP(SV *requestPerlRef)
   SV *perlOwns = ((hashValue != NULL) ? *hashValue : &PL_sv_yes);
   int result = 0;
 
-  if(perlOwns == &PL_sv_yes)
-    result = 1;
-  else 
-    result = 0;
+  result = (perlOwns == &PL_sv_yes);
 
   return result;
 }

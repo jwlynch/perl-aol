@@ -18,6 +18,8 @@
 #include "../Ns_Set/Ns_SetMaps.h"
 #include "../Ns_DString/Ns_DStringMaps.h"
 
+#include "AolserverCommon.h"
+
 #include <nsthread.h>
 #include <tcl.h>
 #include <ns.h>

@@ -313,4 +313,4 @@ DESTROY(handlePerlRef)
 	}
 	
 	Ns_DbPoolPutHandle(handle);
-        LOG(StringF("Ns_DbHandle returned and freed\n"));
+        LOG(StringF("Ns_DbHandle returned and freed"));

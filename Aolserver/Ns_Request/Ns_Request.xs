@@ -102,7 +102,7 @@ DESTROY(reqPerlRef)
             (
               StringF
                 (
-                  "  - request from perl ref %p not freed because null",
+                  "  - request from perl ref %p not freed because not owned",
                   reqPerlRef
                 )
             );

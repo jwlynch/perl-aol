@@ -28,7 +28,7 @@ new(class)
     PREINIT:
 	Ns_Set *theSet;
     CODE:
-        LOG(StringF("Aolserver::Ns_Set new:\n"));
+        LOG(StringF("Aolserver::Ns_Set new:"));
 	theSet = Ns_SetCreate("");
 	if (theSet)
 	{
