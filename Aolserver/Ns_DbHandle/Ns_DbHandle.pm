@@ -265,7 +265,7 @@ Flush() is called.
 
 Overview
 
-Fetch the next waiting row after an Ns_DbSelect 
+Fetch the next waiting row after a Select() call has been made.
 
 SYNTAX
 
@@ -293,6 +293,10 @@ You cannot call ExecDML, GetOneRow, or GetOneRowAtMost with the same
 database handle while fetching rows from the database in a GetRow 
 loop. Doing so flushes any waiting rows and a subsequent call to GetRow 
 will fail. You can do so if you use separate database handles.
+
+Note, if the handle is not presently in "select/getrow loop mode" (i.e.,
+InSelectLoop() returns false), this is an error and the API function
+is not called.
 
 Examples
 

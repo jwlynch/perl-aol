@@ -101,18 +101,25 @@ Flush(handle)
 	RETVAL
 
 int
-GetRow(handle, row)
-	Ns_DbHandle *	handle
+GetRow(handlePerlRef, row)
+	SV *	handlePerlRef
 	Ns_Set *	row
+    PREINIT:
+	Ns_DbHandle *handle = NsDbHandleInputMap(handlePerlRef);
     CODE:
-	RETVAL = Ns_DbGetRow(handle, row);
+	RETVAL = NS_ERROR;
 
-	//   if last row already gotten OR an error occured,
-	// then the presumption is that the row is not valid,
-	//      so make perl forget about it.
+	if(NsDbHandleIsInSelectLoop(handlePerlRef))
+	  {
+	    RETVAL = Ns_DbGetRow(handle, row);
 
-	if(RETVAL == NS_END_DATA || RETVAL == NS_ERROR)
-	  NsDbHandleStoreSelectRow(ST(0), NULL);
+	    //   if last row already gotten OR an error occured,
+	    // then the presumption is that the row is not valid,
+	    //      so make perl forget about it.
+
+	    if(RETVAL == NS_END_DATA || RETVAL == NS_ERROR)
+	      NsDbHandleStoreSelectRow(ST(0), NULL);
+	  }
     OUTPUT:
 	RETVAL
 
