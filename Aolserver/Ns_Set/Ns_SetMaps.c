@@ -52,7 +52,7 @@ SV *NsSetOutputMap(Ns_Set *var, char *class)
   SV *arg = newRV_noinc( sviv );
 
   sv_bless(arg, gv_stashpv(class, TRUE));
-  fprintf(stderr, "set p=%p wrapped as %s\n", var, class);
+  fprintf(stderr, "set p=%p wrapped as %s, ref at %p\n", var, class, arg);
 
   return arg;
 }
