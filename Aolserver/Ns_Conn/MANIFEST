@@ -1,0 +1,9 @@
+Changes
+MANIFEST
+Makefile.PL
+Ns_Conn.pm
+Ns_Conn.xs
+Ns_ConnMaps.c
+Ns_ConnMaps.h
+test.pl
+typemap
