@@ -21,7 +21,9 @@ Ns_Set *NsSetInputMap(SV *arg, char *class, char *varName)
   Ns_Set *result = 0;
 
   if (sv_derived_from(arg, class))
-    result = (Ns_Set *) SvIV( SvRV(arg) );
+    {
+      result = (Ns_Set *) SvIV( SvRV(arg) );
+    }
   else
     {
       char errString[200];
@@ -50,6 +52,7 @@ SV *NsSetOutputMap(Ns_Set *var, char *class)
   SV *arg = newRV_noinc( sviv );
 
   sv_bless(arg, gv_stashpv(class, TRUE));
+  fprintf(stderr, "set p=%p wrapped as %s\n", var, class);
 
   return arg;
 }
