@@ -38,6 +38,7 @@ sub StringifySet
 $out = "";
 
 {
+    my $set;
     my $h = "testing";
     $conn = $Aolserver::Ns_Conn::theConn;
 
