@@ -4,7 +4,6 @@ export PERLCONFIG := $(PERL) $(PERL_AOL)/perl-config
 export LIBPERL    := libperl.so
 
 export NSHOME    := /usr/local/aolserver
-export NSBIN     := $(NSHOME)/bin
 export NSINCLUDE := $(NSHOME)/include
 
 PERLMODULES := Ns_Conn Ns_DbHandle Ns_DString Ns_Request Ns_Set

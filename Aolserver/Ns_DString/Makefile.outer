@@ -12,7 +12,7 @@ Makefile.PL:
 	echo "    'LIBS'	=> [''],   # e.g., '-lm' ";\
 	echo "    'DEFINE'	=> '',     # e.g., '-DHAVE_SOMETHING' ";\
 	echo "    'OBJECT'      => 'Ns_DString.o Ns_DStringMaps.o',";\
-	echo "    'INC'	        => '-I$(NSHOME)/include',     # e.g., '-I/usr/include/other' ";\
+	echo "    'INC'	        => '-I$(NSINCLUDE)',     # e.g., '-I/usr/include/other' ";\
 	echo ");") > Makefile.PL
 
 clean: Makefile

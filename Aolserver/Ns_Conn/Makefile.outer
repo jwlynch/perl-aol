@@ -15,7 +15,7 @@ Makefile.PL:
         echo "    'PREREQ_PM'   => {}, # e.g., Module::Name => 1.1" ;\
 	echo "    'LIBS'	=> [''],   # e.g., '-lm' " ;\
 	echo "    'DEFINE'	=> '',     # e.g., '-DHAVE_SOMETHING' " ;\
-	echo "    'INC'	=> '-I$(NSHOME)/include',     # e.g., '-I/usr/include/other' " ;\
+	echo "    'INC'	=> '-I$(NSINCLUDE)',     # e.g., '-I/usr/include/other' " ;\
 	echo "    'TYPEMAPS'		=> \\@theTypemaps," ;\
 	echo ");" ) > Makefile.PL
 
