@@ -82,7 +82,7 @@ SV *
 Request(connPerlRef)
 	SV *	connPerlRef
     CODE:
-	RETVAL = NsConnGetRequest(connPerlRef);
+	RETVAL = sv_mortalcopy( NsConnGetRequest(connPerlRef) );
     OUTPUT:
 	RETVAL
 
@@ -121,7 +121,7 @@ SV *
 OutputHeaders(connPerlRef)
 	SV *	connPerlRef
     CODE:
-	RETVAL = NsConnGetOutputHeaders(connPerlRef);
+	RETVAL = sv_mortalcopy( NsConnGetOutputHeaders(connPerlRef) );
     OUTPUT:
 	RETVAL
 
@@ -525,7 +525,7 @@ SV *
 Headers(connPerlRef)
 	SV *	connPerlRef
     CODE:
-	RETVAL = NsConnGetHeaders(connPerlRef);
+	RETVAL = sv_mortalcopy( NsConnGetHeaders(connPerlRef) );
     OUTPUT:
 	RETVAL
 
