@@ -1,0 +1,1 @@
+h2xs -n Aolserver::Ns_Set /home/jim/c/aolserver/aolserver3_0/include/nsthread.h /home/jim/c/aolserver/aolserver3_0/include/tcl.h /home/jim/c/aolserver/aolserver3_0/include/ns.h
