@@ -107,7 +107,7 @@ Cancel(handlePerlRef)
 	RETVAL
 
 int
-ExecDML(handle, sql)
+ExecDML(handlePerlRef, sql)
 	SV *	handlePerlRef
 	char *		sql
     PREINIT:
