@@ -46,6 +46,11 @@ export PATH=/usr/local/perl-5.6.0/bin:$PATH
 This will cause this special perl to be found before any others that
 may be installed.
 
+It is hoped that the location of the dir where you build perl has
+no effect on the project. However, it needs to be -installed- into
+the correct place. Otherwise, you must locate and edit any items that
+depend on this place.
+
 perl-config
 -----------
 
@@ -58,14 +63,14 @@ often the special perl you built for the perl-aol project. perl-config
 and the dir /path/to/perl-aol/aolsvr-src/ should be owned by the
 aolserver administrative user and maybe group. (see aolserver below)
 
-It must be in perl-aol/aolsvr-src/ and can be run as:
+It must be in perl-aol/ and can be run as:
 
-   perl /path/to/perl-aol/aolsvr-src/perl-config <option>
+   /path/to/special/perl /path/to/perl-aol/perl-config <option>
 
 where <option> is one of --cflags, --libs or --includes.
 
-It outputs command line options or a pathname, depending on its
-argument.
+It outputs command line options to a C compiler, or a pathname, 
+depending on its argument.
 
 It's perfectly safe to give this a try. It writes no files nor changes
 any resources.
@@ -75,27 +80,26 @@ aolserver
 
 Summary: Recommended version is aolserver-3.1 final, the first
 version that allows module dirs outside aolserver source dir. 
-The glue module is called nsperl. Recommended to build in a 
+The glue module is called nsperl. Recommended to install in a 
 particular dir, other dirs available by you discovering what to
 edit in the makefile of everything else. The source dir also
 has a recommended place (at least wrt the nsperl src). You should
 have a user called aolserver (or maybe nsadmin) and you might 
-have a group for global web pages and scripts. The dirs 
-/path/to/perl-aol/aolsvr-src/ and /usr/local/aolserver/ should
-be owned by this user/group. When you build aolserver or any
+have a group for global web pages and scripts. The aolserver
+source code directory and the install directory /usr/local/aolserver/ 
+should be owned by this user/group. When you build aolserver or any
 external modules (like nsperl or nspostgres), you should build
-and install as aolserver or nsadmin.
+and install when logged in as aolserver or nsadmin.
 
 The recommended version of aolserver is the final version of 3.1.
 Earlier versions were not prepared to have the source of 3rd-party 
 (and other external) modules located in arbitrary dirs.
 
-You should place the source in perl-aol/aolsvr-src and untar it 
-there. You should be sure it installs in /usr/local/aolserver
+You should be sure aolserver installs in /usr/local/aolserver
 (this should be the value of PREFIX in the helper/include file
-perl-aol/aolsvr-src/aolserver3_1/include/Makefile.global).
-If you want a different PREFIX than this, you probably have to
-edit the makefiles of other pieces of this work.
+named .../aolserver3_1/include/Makefile.global). If you want a 
+different PREFIX than this, you probably have to edit the 
+makefiles of other pieces of perl-aol.
 
 Because aolserver needs a user and maybe a group for itself,
 you should become that user to make the dirs perl-aol/aolsvr-src 
@@ -112,8 +116,8 @@ make install
 the perl Aolserver::* modules
 --- ---- ------------ -------
 
-Summary: You should find a tarball Aolserver.tar.gz and an Aolserver
-dir inside the main dir perl-aol. Requires that aolserver be properly
+Summary: You should find a directory Aolserver inside the main dir 
+perl-aol. Requires that aolserver and the special perl be properly
 installed. cd into each Ns_* dir and do "perl Makefile.PL && make &&
 make install". 
 
@@ -179,4 +183,6 @@ the modules are installed is in /usr/local/aolserver/bin/.
 
 Make sure the perl module sources (Aolserver::*) are installed
 in the correct place. nsperl depends on source files in them.
-
+(both the perl module sources and nsperl sources come with this
+distribution, and are set up correctly, so unless you move them,
+this should not be a problem.)
