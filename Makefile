@@ -1,5 +1,6 @@
 PERL := perl-thread
 export PERLCONFIG := $(PERL) $(shell pwd)/perl-config
+export LIBPERL := libperl.a
 
 export NSHOME := /usr/lib/aolserver
 
