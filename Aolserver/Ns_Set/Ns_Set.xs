@@ -209,7 +209,15 @@ void
 DESTROY(self)
 	SV *	self
     CODE:
+	fprintf(stderr, "Ns_Set::DESTROY(%p) called: ", self);
 	if(! NsSetIsNull(self))
-    	  Ns_SetFree(NsSetInputMap(self, "Aolserver::Ns_Set", "self"));
-
+	{
+	  Ns_Set *tmp = NsSetInputMap(self, "Aolserver::Ns_Set", "self");
+    	  Ns_SetFree(tmp);
+	  fprintf(stderr, "NOT null. freeing set at %p.\n", tmp);
+	}
+	else
+	{
+	  fprintf(stderr, "IS null. NOT freeing.\n");
+	}
 
