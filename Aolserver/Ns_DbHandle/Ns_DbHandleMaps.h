@@ -9,10 +9,11 @@
 
 Ns_DbHandle *NsDbHandleInputMap(SV *arg);
 int NsDbHandleIsNull(SV *arg);
-void MakeNsDbHandleNull(SV *arg);
+void NsDbHandleMakeNull(SV *arg);
 SV *NsDbHandleOutputMap(Ns_DbHandle *var, char *class);
-SV *GetSelectRow(SV *dbHandlePerlRef);
-void StoreSelectRow(SV *dbHandlePerlRef, Ns_Set *selectRowSet);
+SV *NsDbHandleGetSelectRow(SV *dbHandlePerlRef);
+void NsDbHandleStoreSelectRow(SV *dbHandlePerlRef, Ns_Set *selectRowSet);
+int NsDbHandleIsInSelectLoop(SV *dbHandlePerlRef);
 
 //SV *GetHeaders(SV *connPerlRef);
 //SV *GetOutputHeaders(SV *connPerlRef);
