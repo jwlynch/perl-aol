@@ -165,9 +165,9 @@ Select(handlePerlRef, sql)
 
 	  handle = NsDbHandleInputMap(handlePerlRef);
 	  selectRow = Ns_DbSelect(handle, sql);
-	  //NsDbHandleStoreSelectRow(handlePerlRef, selectRow);
-	  //RETVAL = 
-          //   sv_mortalcopy( NsDbHandleGetSelectRow(handlePerlRef) );
+	  NsDbHandleStoreSelectRow(handlePerlRef, selectRow);
+	  RETVAL = 
+             sv_mortalcopy( NsDbHandleGetSelectRow(handlePerlRef) );
 	}
     OUTPUT:
 	RETVAL
