@@ -1,5 +1,5 @@
 #
-# $Header: /home/jim/perl-aol-cvs-repo-backups/perl-aol/nsperl/Makefile,v 1.2 2000/11/09 17:19:32 jim Exp $
+# $Header: /home/jim/perl-aol-cvs-repo-backups/perl-aol/nsperl/Makefile,v 1.3 2000/11/09 17:37:58 jim Exp $
 #
 # nsexample --
 #
@@ -31,7 +31,7 @@ NSHOME   =  /usr/local/aolserver
 #  you wish to build with must be found first in the path.
 #
 
-PERLCONFIG = perl-config
+PERLCONFIG = ../perl-config
 
 PLIBS   = $(LIBS) -L$(shell perl $(PERLCONFIG) --libs) -lperl -lcrypt
 PINCLUDES = -I$(shell perl $(PERLCONFIG) --includes)
