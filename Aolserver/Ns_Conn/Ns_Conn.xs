@@ -482,8 +482,19 @@ FlushContent(conn)
 Ns_Set *
 GetQuery(conn)
 	Ns_Conn *	conn
+    PREINIT:
+	Ns_Set *	setP;
     CODE:
-	RETVAL = Ns_ConnGetQuery(conn);
+	setP = Ns_ConnGetQuery(conn);
+
+	if(setP)
+	{
+	    RETVAL = Ns_SetCopy( setP );
+	}
+	else
+	{
+	    RETVAL = Ns_SetCreate("");
+	}
     OUTPUT:
 	RETVAL
 
