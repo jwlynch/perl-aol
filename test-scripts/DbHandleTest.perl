@@ -48,7 +48,9 @@ $out = "";
 	$out .= "selecting... here is the initial set:\n";
 	$set = $h->Select("select * from a");
 
-	$h->GetRow($set);	
+	$h->GetRow($set);
+	
+	$out .= StringifySet($set);
 
 	$h->DESTROY();
     }
