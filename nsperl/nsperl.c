@@ -34,7 +34,7 @@
  *
  */
 
-static const char *RCSID = "@(#) $Header: /home/jim/perl-aol-cvs-repo-backups/perl-aol/nsperl/nsperl.c,v 1.5 2000/11/23 17:15:49 jwl Exp $, compiled: " __DATE__ " " __TIME__;
+static const char *RCSID = "@(#) $Header: /home/jim/perl-aol-cvs-repo-backups/perl-aol/nsperl/nsperl.c,v 1.6 2000/11/28 09:38:30 jwl Exp $, compiled: " __DATE__ " " __TIME__;
 
 #include "ns.h"
 
@@ -251,11 +251,24 @@ int do_perl(void *context, Ns_Conn *conn)
 
       /* add lines to store conn (an Ns_Conn *) in the perl interp */
 
-      sv_setsv
-	(
-	  get_sv("Aolserver::Ns_Conn::theConn", TRUE | GV_ADDMULTI),
-	  NsConnOutputMap(conn, "Aolserver::Ns_Conn")
-	);
+      {
+	SV *theConnVar = get_sv("Aolserver::Ns_Conn::theConn", TRUE);
+	SV **hashValue;
+	HV *theStash;
+	GV *theConnGlob;
+
+	sv_setsv
+	  (
+	    theConnVar,
+	    NsConnOutputMap(conn, "Aolserver::Ns_Conn")
+	  );
+
+	theStash = SvSTASH(SvRV(theConnVar));
+	hashValue = hv_fetch(theStash, "theConn", 7, FALSE);
+	theConnGlob = (GV *) *hashValue;
+	GvMULTI_on(theConnGlob);
+      }
+      
 
       perl_run(aTHX);
 
