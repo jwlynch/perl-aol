@@ -112,7 +112,7 @@ GetRow(handle, row)
 	//      so make perl forget about it.
 
 	if(RETVAL == NS_END_DATA || RETVAL == NS_ERROR)
-	  StoreSelectRow(ST(0), NULL);
+	  NsDbHandleStoreSelectRow(ST(0), NULL);
     OUTPUT:
 	RETVAL
 
