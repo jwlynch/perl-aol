@@ -1,5 +1,5 @@
 Makefile: Makefile.PL
-	$(PERL) Makefile.PL
+	$(PERL) Makefile.PL PREFIX=$(PERLMODDIR) LIB=$(PERLMODLIBDIR)
 
 Makefile.PL:
 	rm -f Makefile.PL

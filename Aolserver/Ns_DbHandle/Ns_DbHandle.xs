@@ -5,6 +5,7 @@
 #include <nsthread.h>
 #include <tcl.h>
 #include <ns.h>
+#include <nsdb.h>
 
 #include <stdio.h>
 

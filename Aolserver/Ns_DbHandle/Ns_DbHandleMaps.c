@@ -1,7 +1,7 @@
 //
 // This is now an Aolserver::Ns_DbHandle:
 // 
-// reference -> hash -> {theNs_DbHandle} -> SvIV -> Ns_Conn
+// reference -> hash -> {theNs_DbHandle} -> SvIV -> Ns_DbHandle
 //      |               {selectRowSet}   -> Ns_Set containing current row
 //      |                                     in multirow select process
 //      |               {inSelectLoopP}  -> true if select loop in progress
@@ -23,6 +23,7 @@
 #include <nsthread.h>
 #include <tcl.h>
 #include <ns.h>
+#include <nsdb.h>
 
 #include <stdio.h>
 

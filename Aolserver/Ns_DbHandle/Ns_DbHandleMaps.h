@@ -6,6 +6,7 @@
 #include "XSUB.h"
 
 #include "ns.h"
+#include "nsdb.h"
 
 #include "AolserverCommon.h"
 
