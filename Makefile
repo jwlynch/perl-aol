@@ -20,7 +20,7 @@ stamp-perlmodules:
 stamp-nsperl: nsperl/nsperl.so
 	touch stamp-nsperl
 
-nsperl/nsperl.so: 
+nsperl/nsperl.so: nsperl/nsperl.c nsperl/Makefile
 	cd nsperl; $(MAKE)
 
 pmclean:

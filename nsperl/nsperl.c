@@ -34,7 +34,7 @@
  *
  */
 
-static const char *RCSID = "@(#) $Header: /home/jim/perl-aol-cvs-repo-backups/perl-aol/nsperl/nsperl.c,v 1.7 2000/12/11 12:36:32 jwl Exp $, compiled: " __DATE__ " " __TIME__;
+static const char *RCSID = "@(#) $Header: /home/jim/perl-aol-cvs-repo-backups/perl-aol/nsperl/nsperl.c,v 1.8 2000/12/12 10:01:30 jwl Exp $, compiled: " __DATE__ " " __TIME__;
 
 #include "ns.h"
 
@@ -211,7 +211,12 @@ trunclog(void)
  *----------------------------------------------------------------------
  */
 
-#include "../../Aolserver/Ns_Conn/Ns_ConnMaps.h"
+#include "../Aolserver/Ns_Conn/Ns_ConnMaps.h"
+
+void Wput(const char *it, Ns_Conn *conn)
+{
+  loggit(it);
+}
 
 #define NEVER 0
 
@@ -242,15 +247,10 @@ int do_perl(void *context, Ns_Conn *conn)
       if(aTHX)
 	{
 	  Ns_DStringInit(&scriptPath);
-      
 	  Ns_UrlToFile(&scriptPath, hServer, theReq->url);
-      
 	  embedding[2] = Ns_DStringValue(&scriptPath);
-
 	  perl_construct(aTHX);
-      
 	  perl_parse(aTHX_ xs_init, 2, embedding, NULL);
-
 	  /* add lines to store conn (an Ns_Conn *) in the perl interp */
 
 #ifdef SKIP
@@ -280,7 +280,6 @@ int do_perl(void *context, Ns_Conn *conn)
 #endif
 
 	  perl_run(aTHX);
-	  
 	  perl_destruct(aTHX);
 	  perl_free(aTHX);
 	}
