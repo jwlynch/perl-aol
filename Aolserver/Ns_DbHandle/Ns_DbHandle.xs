@@ -150,9 +150,7 @@ void SetSelectRow(handlePerlRef, value)
 SV *
 Select(handlePerlRef, sql)
 	SV *	handlePerlRef
-	char *		sql
-    PREINIT:
-	Ns_DbHandle *handle;
+	char *	sql
     CODE:
 	RETVAL = &PL_sv_undef;
 
@@ -162,21 +160,32 @@ Select(handlePerlRef, sql)
             sv_derived_from(handlePerlRef, "Aolserver::Ns_DbHandle")
 	  )
 	{
+	  Ns_DbHandle *handle;
+	  Ns_Set *selectRow;
+
 	  handle = NsDbHandleInputMap(handlePerlRef);
-
-	  NsDbHandleStoreSelectRow(handlePerlRef, Ns_DbSelect(handle, sql));
-
-	  RETVAL = 
-             sv_mortalcopy( NsDbHandleGetSelectRow(handlePerlRef) );
+	  selectRow = Ns_DbSelect(handle, sql);
+	  //NsDbHandleStoreSelectRow(handlePerlRef, selectRow);
+	  //RETVAL = 
+          //   sv_mortalcopy( NsDbHandleGetSelectRow(handlePerlRef) );
 	}
     OUTPUT:
 	RETVAL
 
 void
-DESTROY(self)
-	Ns_DbHandle *	self
+DESTROY(handlePerlRef)
+	SV *	handlePerlRef
+    PREINIT:
+	Ns_DbHandle *handle = NsDbHandleInputMap(handlePerlRef);
     CODE:
 	fprintf(stderr, "YES the destroy method gets called\n");
-	Ns_DbPoolPutHandle(self);
+
+	if(NsDbHandleIsInSelectLoop(handlePerlRef))
+	{
+	  NsDbHandleStoreSelectRow(handlePerlRef, (Ns_Set *) NULL);
+	  Ns_DbCancel(handle);
+	}
+
+	Ns_DbPoolPutHandle(handle);
 	// PROBLEM: this never happens. WHY?
 

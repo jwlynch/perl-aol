@@ -34,7 +34,7 @@
  *
  */
 
-static const char *RCSID = "@(#) $Header: /home/jim/perl-aol-cvs-repo-backups/perl-aol/nsperl/nsperl.c,v 1.2 2000/11/09 17:40:23 jim Exp $, compiled: " __DATE__ " " __TIME__;
+static const char *RCSID = "@(#) $Header: /home/jim/perl-aol-cvs-repo-backups/perl-aol/nsperl/nsperl.c,v 1.3 2000/11/19 04:25:53 jwl Exp $, compiled: " __DATE__ " " __TIME__;
 
 #include "ns.h"
 
@@ -232,7 +232,7 @@ int do_perl(void *context, Ns_Conn *conn)
 
   if(Ns_UrlIsFile(hServer, theReq->url))
     {
-      char *embedding[2] = { "" };
+      char *embedding[3] = { "", "-w" };
       Ns_DString scriptPath;
       PerlInterpreter *my_perl;
       Ns_DString sendMe;
@@ -242,7 +242,7 @@ int do_perl(void *context, Ns_Conn *conn)
       
       Ns_UrlToFile(&scriptPath, hServer, theReq->url);
       
-      embedding[1] = Ns_DStringValue(&scriptPath);
+      embedding[2] = Ns_DStringValue(&scriptPath);
 
       my_perl = perl_alloc();
       perl_construct(my_perl);

@@ -209,9 +209,9 @@ Update(self, key, value)
 
 void
 DESTROY(self)
-	Ns_Set *	self
+	SV *	self
     CODE:
 	if(! NsSetIsNull(self))
-    	  Ns_SetFree(self);
+    	  Ns_SetFree(NsSetInputMap(self));
 
 
