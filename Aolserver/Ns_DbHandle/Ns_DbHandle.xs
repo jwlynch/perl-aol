@@ -126,15 +126,25 @@ InterpretSqlFile(handle, filename)
 	RETVAL
 
 SV *
-Select(handle, sql)
-	Ns_DbHandle *	handle
+Select(handlePerlRef, sql)
+	SV *	handlePerlRef
 	char *		sql
     PREINIT:
-	Ns_Set *rowSet;
+	Ns_DbHandle *handle;
     CODE:
-	rowSet = Ns_DbSelect(handle, sql);
-	StoreSelectRowSet(ST(0), rowSet);
-	RETVAL = GetSelectRowSet(ST(0));
+	RETVAL = PL_sv_undef;
+
+	if
+	  (
+	    sv_isobject(handlePerlRef) && 
+            sv_derived_from(handlePerlRef, "Aolserver::Ns_DbHandle")
+	  )
+	{
+	  handle = NsDbHandleInputMap(handlePerlRef);
+
+	  NsDbHandleStoreSelectRowSet(handlePerlRef, Ns_DbSelect(handle, sql));
+	  RETVAL = NsDbHandleGetSelectRowSet(handlePerlRef);
+	}
     OUTPUT:
 	RETVAL
 
@@ -142,7 +152,7 @@ void
 DESTROY(self)
 	Ns_DbHandle *	self
     CODE:
+	fprintf(stderr, "YES the destroy method gets called\n");
 	Ns_DbPoolPutHandle(self);
 	// PROBLEM: this never happens. WHY?
-	fprintf(stderr, "YES the destroy method gets called\n");
 
