@@ -5,7 +5,7 @@
 #include "perl.h"
 #include "XSUB.h"
 
-#include "/usr/local/aolserver/include/ns.h"
+#include "ns.h"
 
 Ns_Set *NsSetInputMap(SV *arg, char *class, char * varName);
 int NsSetIsNull(SV *arg);
