@@ -1,0 +1,7 @@
+Changes
+MANIFEST
+Makefile.PL
+Ns_DString.pm
+Ns_DString.xs
+test.pl
+typemap
