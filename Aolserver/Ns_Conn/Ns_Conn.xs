@@ -714,4 +714,7 @@ void
 DESTROY(connPerlRef)
 	SV *	connPerlRef
     CODE:
+        fprintf(stderr, "DESTROY Ns_Conn at %p\n", connPerlRef);
+	fprintf(stderr, " - NsConnMakeNull(connPerlRef);\n");
+	fflush(stderr);
 	//NsConnMakeNull(connPerlRef);
