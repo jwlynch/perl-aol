@@ -115,9 +115,6 @@ SV *NsConnOutputMap(Ns_Conn *var, char *class)
 
   sv_bless(arg, gv_stashpv(class, TRUE));
 
-  fprintf(stderr, "NsConnOutputMap: ");
-  NsConnPrintRefCounts(arg);
-
   return arg;
 }
 

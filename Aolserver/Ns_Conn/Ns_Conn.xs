@@ -95,12 +95,7 @@ SV *
 OutputHeaders(connPerlRef)
 	SV *	connPerlRef
     CODE:
-	fprintf(stderr, "OutputHeaders:\n");
-	fprintf(stderr, "Before: ");
-	NsConnPrintRefCounts(connPerlRef);
 	RETVAL = sv_mortalcopy( NsConnGetOutputHeaders(connPerlRef) );
-	fprintf(stderr, "After:  ");
-	NsConnPrintRefCounts(connPerlRef);
     OUTPUT:
 	RETVAL
 
@@ -522,12 +517,7 @@ Host(connPerlRef)
     PREINIT:
 	Ns_Conn *conn = NsConnInputMap(connPerlRef, "Aolserver::Ns_Conn", "conn");
     CODE:
-	fprintf(stderr, "Host:\n");
-	fprintf(stderr, "Before: ");
-	NsConnPrintRefCounts(connPerlRef);
 	RETVAL = Ns_ConnHost(conn);
-	fprintf(stderr, "After:  ");
-	NsConnPrintRefCounts(connPerlRef);
     OUTPUT:
 	RETVAL
 
@@ -545,12 +535,7 @@ Location(connPerlRef)
     PREINIT:
 	Ns_Conn *conn = NsConnInputMap(connPerlRef, "Aolserver::Ns_Conn", "conn");
     CODE:
-	fprintf(stderr, "Location:\n");
-	fprintf(stderr, "Before: ");
-	NsConnPrintRefCounts(connPerlRef);
 	RETVAL = Ns_ConnLocation(conn);
-	fprintf(stderr, "After:  ");
-	NsConnPrintRefCounts(connPerlRef);
     OUTPUT:
 	RETVAL
 
