@@ -21,6 +21,28 @@
 
 #include <stdio.h>
 
+void NsConnPrintRefCounts(SV *connPerlRef)
+{
+  HV *hashReferent = (HV*)SvRV(connPerlRef);
+  SV **hv = hv_fetch( (HV*)SvRV(arg), "theNs_Conn", 10, FALSE);
+  SV *theConnIV  = hv ? *hv : 0;
+  SV *headers    = NsConnGetHeaders(connPerlRef);
+  SV *outHeaders = NsConnGetOutputHeaders(connPerlRef);
+  SV *request    = NsConnGetRequest(connPerlRef);
+
+  fprintf
+    (
+      stderr, 
+      "refcounts: ref: %d, hash: %d, conn: %d, hdrs: %d, oHdrs: %d, req: %d\n",
+      SvREFCNT(connPerlRef),
+      SvREFCNT(hashReferent)
+      theConnIV ? SvREFCNT(theConnIV) : -99,
+      SvREFCNT(headers),
+      SvREFCNT(outHeaders),
+      SvREFCNT(request),
+    );
+}
+
 Ns_Conn *NsConnInputMap(SV *arg)
 {
   dTHX;

@@ -33,7 +33,8 @@ Ns_Conn *
 new(class)
 	char *		class
 
-    CODE:
+    CODE:	
+	return 0;
 	RETVAL = malloc(sizeof(Ns_Conn));
 	if (RETVAL)
 	{
