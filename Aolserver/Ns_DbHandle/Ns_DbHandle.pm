@@ -228,7 +228,9 @@ Examples
         if ($status != NS_OK) 
         {
                 # handle error condition
-        }       
+        }
+
+        $handle->DESTROY(); # this should not be necessary... for now it is tho
     }
 
 =item Flush()
