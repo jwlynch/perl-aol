@@ -6,4 +6,4 @@ T_Ns_Set
 
 OUTPUT
 T_Ns_Set
-	$arg = NsSetOutputMap($var, \"Aolserver::Ns_Set\")
+	$arg = NsSetOutputMap($var, \"Aolserver::Ns_Set\");
