@@ -19,7 +19,6 @@
 
 #include <stdio.h>
 
-Ns_DbHandle *NsDbHandleInputMap(SV *arg);
 Ns_DbHandle *NsDbHandleInputMap(SV *arg)
 {
   dTHX;
@@ -32,7 +31,18 @@ Ns_DbHandle *NsDbHandleInputMap(SV *arg)
   return result;
 }
 
-SV *NsDbHandleOutputMap(Ns_DbHandle *var, char *class);
+int NsDbHandleIsNull(SV *arg)
+{
+  return NsDbHandleInputMap(arg) == NULL;
+}
+
+void MakeNsDbHandleNull(SV *arg)
+{
+  dTHX;
+  
+  //sv_setiv(SvRV(arg), 0);
+}
+
 SV *NsDbHandleOutputMap(Ns_DbHandle *var, char *class)
 {
   dTHX;
