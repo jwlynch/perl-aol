@@ -1,10 +1,12 @@
 //
 // This is now an Aolserver::Ns_Conn:
 // 
-// reference    -> hash -> {theNs_Conn}    -> SvIV -> Ns_Conn
-//      |                  {headers}       -> (set ref as def'd by its typemap)
-// blessed as              {outputheaders} -> (set ref as def'd by its typemap)
-// "Aolserver::Ns_Conn"    {request}       -> (request ref as def'd by typemap)
+// reference -> hash -> {theNs_Conn}    -> SvIV -> Ns_Conn
+//      |               {headers}       -> (set ref as def'd by its typemap)
+//      |               {outputheaders} -> (set ref as def'd by its typemap)
+//      |               {request}       -> (request ref as def'd by typemap)
+//   blessed as
+// "Aolserver::Ns_Conn"
 
 #include "EXTERN.h"
 #include "perl.h"
@@ -28,14 +30,14 @@ Ns_Conn *NsConnInputMap(SV *arg)
   if(hashValue)
     result = (Ns_Conn *) SvIV( *hashValue );
  
-  return result;
+  return hashValueresult;
 }
 
 SV *NsConnOutputMap(Ns_Conn *var, char *class)
 {
   dTHX;
   HV *hashReferent = newHV();
-  SV *arg = newRV_inc( (SV *) hashReferent);
+  SV *arg = newRV_noinc( (SV *) hashReferent);
 
   hv_store
     (
@@ -85,7 +87,7 @@ SV *NsConnGetHeaders(SV *connPerlRef)
   dTHX;
   SV **hashValue = hv_fetch( (HV*)SvRV(connPerlRef), "headers", 7, FALSE);
   
-  return *hashValue;
+  return hashValue ? *hashValue : 0;
 }
 
 
@@ -103,7 +105,7 @@ SV *NsConnGetOutputHeaders(SV *connPerlRef)
         FALSE
       );
   
-  return *hashValue;
+  return hashValue ? *hashValue : 0;
 }
 
 // outputs the stored ref to the Ns_Request, takes the ref to the conn as input
@@ -120,6 +122,6 @@ SV *NsConnGetRequest(SV *connPerlRef)
         FALSE
       );
   
-  return *hashValue;
+  return hashValue ? *hashValue : 0;
 }
 

@@ -53,33 +53,6 @@ new(class)
 	}
 
 SV *
-newReferral(class, conn)
-        char *		class
-        Ns_Conn *	conn
-    CODE:
-	//SV* anSV;
-
-        RETVAL = sv_newmortal();
-        fprintf(stderr, "addr of newmortal is %p\n", ST(0));
-        fprintf(stderr, "refcount of newmortal is %d\n", SvREFCNT(ST(0)));
-        sv_setref_pv(RETVAL, class, conn);
-        fprintf(stderr, "addr of ST(0) is %p\n", ST(0));
-        fprintf(stderr, "refcount of ST(0) is %d\n", SvREFCNT(ST(0)));
-	
-	// NOTE! This is -dependent- on the internals of Ns_Conn!!
-	//
-	// the idea here is to create perl references to each of
-	// the pieces the API would return pointers to, then each
-	// API function that would otherwise return a pointer to 
-	// a member of the struct, would instead return the perl
-	// reference that was originally canned by this function.
-
-	// headers
-	//anSV = sv_newmortal();
-    OUTPUT:
-        RETVAL
-
-SV *
 Request(connPerlRef)
 	SV *	connPerlRef
     CODE:
