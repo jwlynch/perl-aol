@@ -291,30 +291,39 @@ the next row fetched from the database. Possible return values are:
 
 You cannot call ExecDML, GetOneRow, or GetOneRowAtMost with the same 
 database handle while fetching rows from the database in a GetRow 
-loop. Doing so flushes any waiting rows and a subsequent call to GetRow 
-will fail. You can do so if you use separate database handles.
+loop. Doing so Cancel()s any waiting rows and a subsequent call to GetRow 
+will fail. You -can- do so, however, if you use separate database handles.
 
 Note, if the handle is not presently in "select/getrow loop mode" (i.e.,
-InSelectLoop() returns false), this is an error and the API function
-is not called.
+if InSelectLoop() returns false), this is an error and the API function
+is not called. NS_ERROR is returned.
+
+If the row set presented to GetRow() is not the one returned by Select(), 
+this is also an error; again, NS_ERROR is returned, and the call to the 
+API function Ns_DbHandleGetRow() is prevented.
 
 Examples
 
-[META: convert to perl]
+        my $handle;
+        my $row;
+        my $status;
 
-        Ns_DbHandle *handle;
-        Ns_Set *row;
-        int             status;
-        handle = Ns_DbPoolGetHandle("mypool");
-        row = Ns_DbSelect(handle, "select * from mytable");
-        if (row == NULL) {
-                /*... handle select error ...*/
+        $handle = new Aolserver::Ns_DbHandle("mypool");
+
+        $row = $handle->Select("select * from mytable");
+        if (! $handle->InSelectLoop()) 
+        {
+                # ... handle select error ...
         }
-        while ((status = Ns_DbGetRow(handle, row)) == NS_OK) {
-                /*... process the row fetched from the database ...*/
+
+        while ( ($status = $handle->GetRow($row)) == NS_OK) 
+        {
+                # ... process the row fetched from the database ...
         }
-        if (status != NS_END_DATA) {
-                /*... handle get row error ...*/
+
+        if ($status != NS_END_DATA) 
+        {
+                # ... handle get row error ...
         }
 
 =item GetOneRow() (note, this calls Ns_Db1Row())
@@ -448,17 +457,16 @@ SYNTAX
 
 DESCRIPTION
 
+This function returns a pointer to the stored perl infrastructure of the
+database row, whose lifespan is the same as the database handle wrapping.
+
+Some details:
+
 The perl wrapping of aolserver's Ns_DbHandle was designed to hold the row
 being iterated upon by Select() and GetRow(). The reason for the special
 handling, is that the docs said that the row structure is statically
 allocated, and no attempt should be made to alter or free it; normally,
 the Ns_Set perl wrapping would free it, so that had to be prevented.
-
-This function returns a pointer to the stored perl infrastructure of the
-database row, whose lifespan is the same as the database handle wrapping.
-
-NOTE the existance of SetSelectRow; it alters a DIFFERENT pointer. Please
-see its docs for details.
 
 =item InterpretSqlFile
 
@@ -480,8 +488,6 @@ SYNTAX
        <handle object> is a reference to an Aolserver::Ns_DbHandle object.
 
 =item Select
-
-=item SetSelectRow
 
 Overview
 
