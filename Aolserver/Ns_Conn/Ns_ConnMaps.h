@@ -16,4 +16,6 @@ SV *NsConnGetHeaders(SV *connPerlRef);
 SV *NsConnGetOutputHeaders(SV *connPerlRef);
 SV *NsConnGetRequest(SV *connPerlRef);
 
+void NsConnMakeNull(SV *connPerlRef);
+
 #endif

@@ -710,10 +710,8 @@ WriteConn(conn, buf, len)
     OUTPUT:
 	RETVAL
 
-# void
-# DESTROY(conn)
-#	Ns_Conn *	conn
-#    CODE:
-#	/* when a way to create connections is discovered ( and */
-#       /* put into new() ), undo here.                         */
-#	free(conn);
+void
+DESTROY(connPerlRef)
+	SV *	connPerlRef
+    CODE:
+	NsConnMakeNull(connPerlRef);

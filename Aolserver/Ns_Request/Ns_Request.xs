@@ -45,7 +45,10 @@ SkipUrl(request, nurl)
 	RETVAL
 
 void
-DESTROY(req)
-	Ns_Request *	req
+DESTROY(reqPerlRef)
+	SV *	reqPerlRef
+    PREINIT:
+	Ns_Request *req = NsRequestInputMap(reqPerlRef);
     CODE:
-	Ns_FreeRequest(req);
+	if(! NsRequestIsNull(reqPerlRef))
+	  Ns_FreeRequest(req);

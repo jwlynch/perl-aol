@@ -34,7 +34,7 @@
  *
  */
 
-static const char *RCSID = "@(#) $Header: /home/jim/perl-aol-cvs-repo-backups/perl-aol/nsperl/nsperl.c,v 1.14 2000/12/27 00:32:41 jwl Exp $, compiled: " __DATE__ " " __TIME__;
+static const char *RCSID = "@(#) $Header: /home/jim/perl-aol-cvs-repo-backups/perl-aol/nsperl/nsperl.c,v 1.15 2000/12/27 02:13:19 jwl Exp $, compiled: " __DATE__ " " __TIME__;
 
 #include "ns.h"
 
@@ -246,6 +246,8 @@ int do_perl(void *context, Ns_Conn *conn)
 
       if(aTHX)
 	{
+	  SV *connPerlRef;
+
 	  Ns_DStringInit(&scriptPath);
 	  Ns_UrlToFile(&scriptPath, hServer, theReq->url);
 	  embedding[2] = Ns_DStringValue(&scriptPath);
@@ -273,25 +275,26 @@ int do_perl(void *context, Ns_Conn *conn)
 	  }
 #else
 	  {
-	    SV *conPerlRef = NsConnOutputMap(conn, "Aolserver::Ns_Conn");
 	    SV *varPtr = get_sv("Aolserver::Ns_Conn::theConn", TRUE | GV_ADDMULTI);
+
+	    connPerlRef = NsConnOutputMap(conn, "Aolserver::Ns_Conn");
 
 	    sv_setsv
 	      (
 	        varPtr,
-	        conPerlRef
+	        connPerlRef
 	      );
 	    //SvREFCNT_inc( SvRV(varPtr) );
 
 fprintf(stderr, "varPtr => %ld (expect 1)\n", SvREFCNT(varPtr));
-fprintf(stderr, "conPerlRef => %ld (expect 1)\n", SvREFCNT(conPerlRef));
+fprintf(stderr, "connPerlRef => %ld (expect 1)\n", SvREFCNT(connPerlRef));
 fprintf(stderr, "%%{varPtr} => %ld (expect 2)\n", SvREFCNT(SvRV(varPtr)));
-            SvREFCNT_dec(conPerlRef); /* done with this */
+            SvREFCNT_dec(connPerlRef); /* done with this */
 fprintf(stderr, "%%{varPtr} => %ld (expect 1)\n", SvREFCNT(SvRV(varPtr)));
 	  }
 #endif
 
-	  //perl_run(aTHX);
+	  perl_run(aTHX);
 	  perl_destruct(aTHX);
 	  perl_free(aTHX);
 	}

@@ -128,6 +128,19 @@ SV *NsConnGetHeaders(SV *connPerlRef)
   return hashValue ? *hashValue : 0;
 }
 
+void NsConnMakeNull(SV *connPerlRef)
+{
+  dTHX;
+  SV **hashValue = hv_fetch( (HV*)SvRV(connPerlRef), "theNs_Conn", 10, FALSE);
+  SV *connIV = hashValue ? *hashValue : 0;
+
+  if(connIV)
+    sv_setiv(connIV, 0);
+
+  NsSetMakeNull( NsConnGetHeaders(connPerlRef) );
+  NsSetMakeNull( NsConnGetOutputHeaders(connPerlRef) );
+  NsRequestMakeNull( NsConnGetRequest(connPerlRef) );
+}
 
 // outputs the stored ref to the Ns_Set, takes the ref to the conn as input
 

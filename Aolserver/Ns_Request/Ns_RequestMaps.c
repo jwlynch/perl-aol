@@ -30,4 +30,20 @@ SV *NsRequestOutputMap(Ns_Request *var, char *class)
   return arg;
 }
 
+int NsRequestIsNull(SV *arg)
+{
+  return NsRequestInputMap(arg) == 0;
+}
+
+void NsRequestStore(SV *requestPerlRef, Ns_Request *request)
+{
+  dTHX;
+  
+  sv_setiv(SvRV(requestPerlRef), (IV) request);
+}
+
+void NsRequestMakeNull(SV *arg)
+{
+  NsRequestStore(arg, NULL);
+}
 
