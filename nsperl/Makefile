@@ -1,5 +1,5 @@
 #
-# $Header: /home/jim/perl-aol-cvs-repo-backups/perl-aol/nsperl/Makefile,v 1.5 2000/11/12 06:44:44 jwl Exp $
+# $Header: /home/jim/perl-aol-cvs-repo-backups/perl-aol/nsperl/Makefile,v 1.6 2000/12/02 04:19:46 jwl Exp $
 #
 # nsexample --
 #
@@ -20,7 +20,7 @@ PERL_AOL = ..
 #NSHOME   =  /home/user/cvs/aolserver
 #NSHOME   =  ../aolserver
 #NSHOME   =  $(PERL_AOL)/aolsvr-src/aolserver3_1
-NSHOME   =  /usr/local/aolserver
+#NSHOME   =  /usr/local/aolserver
 
 #
 # libs and include locations and other parameters for perl
@@ -31,12 +31,10 @@ NSHOME   =  /usr/local/aolserver
 #  you wish to build with must be found first in the path.
 #
 
-PERLCONFIG = ../perl-config
+PLIBS   = $(LIBS) -L$(shell $(PERLCONFIG) --libs) -lperl
+PINCLUDES = -I$(shell $(PERLCONFIG) --includes)
 
-PLIBS   = $(LIBS) -L$(shell perl $(PERLCONFIG) --libs) -lperl
-PINCLUDES = -I$(shell perl $(PERLCONFIG) --includes)
-
-CFLAGS += $(shell perl $(PERLCONFIG) --cflags)
+CFLAGS += $(shell $(PERLCONFIG) --cflags)
 CFLAGS += -I$(PERL_AOL)/Aolserver/Ns_Set
 CFLAGS += -I$(PERL_AOL)/Aolserver/Ns_DString
 CFLAGS += -I$(PERL_AOL)/Aolserver/Ns_Conn
@@ -61,7 +59,7 @@ HDRS     =
 #
 # Extra libraries
 #
-MODLIBS  =  $(shell perl $(PERLCONFIG) --archdir)/auto/DynaLoader/DynaLoader.a $(shell perl $(PERLCONFIG) --archdir)/CORE/libperl.so /usr/lib/libcrypt.a
+MODLIBS  =  $(shell $(PERLCONFIG) --archdir)/auto/DynaLoader/DynaLoader.a $(shell $(PERLCONFIG) --archdir)/CORE/libperl.so /usr/lib/libcrypt.a
 
 #
 # Compiler flags
