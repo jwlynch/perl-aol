@@ -71,7 +71,7 @@ GetOneRow(handlePerlRef, sql)
 	{
 	  RETVAL = NULL;
 	  Ns_DbCancel(handle);
-	  NsDbHandleStoreSelectLoop(handlePerlRef, (Ns_Set *) NULL);
+	  NsDbHandleStoreSelectRow(handlePerlRef, (Ns_Set *) NULL);
 	}
 	else
 	{
@@ -144,7 +144,7 @@ Flush(handlePerlRef)
 	if(NsDbHandleIsInSelectLoop(handlePerlRef))
 	{
 	  RETVAL = Ns_DbFlush(handle);
-	  NsDbHandleStoreSelectLoop(handlePerlRef, (Ns_Set *) NULL);
+	  NsDbHandleStoreSelectRow(handlePerlRef, (Ns_Set *) NULL);
 	}
 	else
 	{
