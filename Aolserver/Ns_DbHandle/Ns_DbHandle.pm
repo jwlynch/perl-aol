@@ -239,12 +239,15 @@ Overview
 
 Flush any waiting rows 
 
-
 Syntax
 
-    int Ns_DbFlush(
-    Ns_DbHandle *handle
-    );
+  <scalar Lvalue> =
+       <handle object> -> 
+                Flush();
+
+ where <scalar Lvalue> is a perl Lvalue that can receive a scalar 
+                         (which will be an error/success code),
+       <handle object> is a reference to an Aolserver::Ns_DbHandle object, and
 
 Description
 
@@ -470,6 +473,24 @@ the Ns_Set perl wrapping would free it, so that had to be prevented.
 
 =item InterpretSqlFile
 
+Overview
+
+Parse DML statements and send to database 
+
+SYNTAX
+
+  <scalar Lvalue> = 
+       <handle object> -> InterpretSqlFile( <filename string> );
+
+ where <scalar Lvalue> is a perl Lvalue that can receive a scalar 
+                         (which the aolserver docs do not say what it is),
+       <handle object> is a reference to an Aolserver::Ns_DbHandle object, and
+
+DESCRIPTION
+
+Parse DML statements from an SQL file and send them to the database for 
+execution.
+
 =item InSelectLoop
 
 Overview
@@ -491,24 +512,52 @@ SYNTAX
 
 Overview
 
-Stores a pointer to an un-wrapped C structure Ns_Set into the stored perl
-infrastructure representing the select row to perl. Not normally used 
-other than by developers of perl-aol.
+Send a row-generating query to the database 
 
 SYNTAX
 
-       <handle object> -> SetSelectRow( <Ns_Set pointer> );
+    <scalar Lvalue> = <handle object> -> Select( <SQL string> );
 
- where <handle object> is a reference to an Aolserver::Ns_DbHandle object, and
-       <Ns_Set pointer> is a pointer to the C Ns_Set structure.
+ where <scalar Lvalue> is a perl Lvalue that can receive a scalar 
+                         (which will be the Ns_Set representing the row),
+       <handle object> is a reference to an Aolserver::Ns_DbHandle object, and
+       <SQL string> is a pointer to the string containing the SQL query.
+
+DESCRIPTION
+
+The Select() method executes the given SQL statement. 
+
+If the call to Select() is successful, it returns an Ns_Set where the 
+field key names are the column names that were returned by the select 
+statement. The field values are NULL until the first call to GetRow(),
+where they are replaced with the values of the first row fetched from 
+the database. 
+
+On error, Select returns undef. Detailed error messages may have 
+accumulated in an internal buffer in the Ns_DbHandle.
 
 =item DESTROY
+
+Overview
+
+Normally called only by the system. Returns the handle to the system
+so it can be again used either by TCL, aolserver or perl,
+and frees all perl infrastructure associated with it.
+
+SYNTAX
+
+    <scalar Lvalue> = <handle object> -> Select( <SQL string> );
+
+ where <scalar Lvalue> is a perl Lvalue that can receive a scalar 
+                         (which will be the Ns_Set representing the row),
+       <handle object> is a reference to an Aolserver::Ns_DbHandle object, and
+       <SQL string> is a pointer to the string containing the SQL query.
 
 =back
 
 =head1 BUGS
 
-None presently known; the handle leak bug has been solved.
+None presently known.
 
 =head1 AUTHOR
 
