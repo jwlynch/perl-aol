@@ -1,12 +1,16 @@
-export PERL_AOL   := $(shell pwd)
-export PERL       := /usr/local/perl-5.6.0/bin/perl
-export PERLCONFIG := $(PERL) $(PERL_AOL)/perl-config
-export LIBPERL    := libperl.so
+export PERL_AOL      := $(shell pwd)
+export PERL          := /usr/bin/perl
+export PERLCONFIG    := $(PERL) $(PERL_AOL)/perl-config
+export LIBPERL       := libperl.so
 
-export NSHOME    := /usr/local/aolserver
+export PERLMODDIR    := /home/jim/c/perl-aol-workbench/perl-modules
+export PERLMODLIBDIR := $(PERLMODDIR)/lib
+
+export NSHOME    := /home/jim/c/perl-aol-workbench/aolserver/aols-inst
 export NSINCLUDE := $(NSHOME)/include
 
 PERLMODULES := Ns_Conn Ns_DbHandle Ns_DString Ns_Request Ns_Set
+# PERLMODULES := Ns_Conn Ns_DString Ns_Request Ns_Set
 
 all: stamp-nsperl stamp-perlmodules
 
