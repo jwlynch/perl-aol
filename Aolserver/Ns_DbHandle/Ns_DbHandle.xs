@@ -137,7 +137,7 @@ int
 GetSelectRow(handlePerlRef)
 	SV *	handlePerlRef
     CODE:
-	RETVAL = NsDbHandleGetSelectRowSet(handlePerlRef);
+	RETVAL = NsDbHandleGetSelectRow(handlePerlRef);
     OUTPUT:
 	RETVAL
 
@@ -145,7 +145,7 @@ void SetSelectRow(handlePerlRef, value)
 	SV *	handlePerlRef
 	int	value
     CODE:
-	NsDbHandleStoreSelectRowSet(handlePerlRef, value);
+	NsDbHandleStoreSelectRow(handlePerlRef, value);
 
 SV *
 Select(handlePerlRef, sql)
@@ -164,8 +164,8 @@ Select(handlePerlRef, sql)
 	{
 	  handle = NsDbHandleInputMap(handlePerlRef);
 
-	  NsDbHandleStoreSelectRowSet(handlePerlRef, Ns_DbSelect(handle, sql));
-	  RETVAL = NsDbHandleGetSelectRowSet(handlePerlRef);
+	  NsDbHandleStoreSelectRow(handlePerlRef, Ns_DbSelect(handle, sql));
+	  RETVAL = NsDbHandleGetSelectRow(handlePerlRef);
 	}
     OUTPUT:
 	RETVAL
