@@ -80,6 +80,6 @@ DESTROY(self)
 	Ns_DString *	self
 
     CODE:
-    	Ns_DStringFree(self);
-	free(self);
+    	//Ns_DStringFree(self);
+	//free(self);
 

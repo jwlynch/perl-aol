@@ -714,4 +714,4 @@ void
 DESTROY(connPerlRef)
 	SV *	connPerlRef
     CODE:
-	NsConnMakeNull(connPerlRef);
+	//NsConnMakeNull(connPerlRef);
