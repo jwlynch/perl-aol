@@ -53,11 +53,3 @@ void NsSetStore(SV *setPerlRef, Ns_Set *set)
   sv_setiv(SvRV(setPerlRef), (IV) set);
 }
 
-void NsSetSwap(SV *set1, SV *set2)
-{
-  Ns_Set *tmp1 = NsSetInputMap(set1);
-  Ns_Set *tmp2 = NsSetInputMap(set2);
-
-  NsSetStore(set1, tmp2);
-  NsSetStore(set2, tmp1);
-}
