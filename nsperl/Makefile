@@ -1,5 +1,5 @@
 #
-# $Header: /home/jim/perl-aol-cvs-repo-backups/perl-aol/nsperl/Makefile,v 1.3 2000/11/09 17:37:58 jim Exp $
+# $Header: /home/jim/perl-aol-cvs-repo-backups/perl-aol/nsperl/Makefile,v 1.4 2000/11/12 03:43:45 jwl Exp $
 #
 # nsexample --
 #
@@ -61,7 +61,7 @@ HDRS     =
 #
 # Extra libraries
 #
-MODLIBS  =  /usr/local/perl-5.6.0/lib/5.6.0/i686-linux-thread-multi/auto/DynaLoader/DynaLoader.a /usr/local/perl-5.6.0/lib/5.6.0/i686-linux-thread-multi/CORE/libperl.so
+MODLIBS  =  $(shell perl $(PERLCONFIG) --archdir)/auto/DynaLoader/DynaLoader.a $(shell perl $(PERLCONFIG) --archdir)/CORE/libperl.so
 
 #
 # Compiler flags
