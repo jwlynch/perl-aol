@@ -34,7 +34,7 @@
  *
  */
 
-static const char *RCSID = "@(#) $Header: /home/jim/perl-aol-cvs-repo-backups/perl-aol/nsperl/nsperl.c,v 1.3 2000/11/19 04:25:53 jwl Exp $, compiled: " __DATE__ " " __TIME__;
+static const char *RCSID = "@(#) $Header: /home/jim/perl-aol-cvs-repo-backups/perl-aol/nsperl/nsperl.c,v 1.4 2000/11/19 07:53:42 jwl Exp $, compiled: " __DATE__ " " __TIME__;
 
 #include "ns.h"
 
@@ -234,7 +234,7 @@ int do_perl(void *context, Ns_Conn *conn)
     {
       char *embedding[3] = { "", "-w" };
       Ns_DString scriptPath;
-      PerlInterpreter *my_perl;
+      PerlInterpreter *this_perl;
       Ns_DString sendMe;
       char *sendStr;
 
@@ -244,10 +244,10 @@ int do_perl(void *context, Ns_Conn *conn)
       
       embedding[2] = Ns_DStringValue(&scriptPath);
 
-      my_perl = perl_alloc();
-      perl_construct(my_perl);
+      this_perl = perl_alloc();
+      perl_construct(this_perl);
       
-      perl_parse(my_perl, xs_init, 2, embedding, NULL);
+      perl_parse(this_perl, xs_init, 2, embedding, NULL);
 
       /* add lines to store conn (an Ns_Conn *) in the perl interp */
 
@@ -257,10 +257,10 @@ int do_perl(void *context, Ns_Conn *conn)
 	  NsConnOutputMap(conn, "Aolserver::Ns_Conn")
 	);
 
-      perl_run(my_perl);
+      perl_run(this_perl);
 
-      perl_destruct(my_perl);
-      perl_free(my_perl);
+      perl_destruct(this_perl);
+      perl_free(this_perl);
     }
   else if(Ns_UrlIsDir(hServer, theReq->url))
     {

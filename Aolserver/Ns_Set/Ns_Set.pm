@@ -47,6 +47,7 @@ bootstrap Aolserver::Ns_Set $VERSION;
 
 1;
 __END__
+
 =head1 NAME
 
 Aolserver::Ns_Set - NaviServer, err, Aolserver's associative array
