@@ -34,7 +34,7 @@
  *
  */
 
-static const char *RCSID = "@(#) $Header: /home/jim/perl-aol-cvs-repo-backups/perl-aol/nsperl/nsperl.c,v 1.6 2000/11/28 09:38:30 jwl Exp $, compiled: " __DATE__ " " __TIME__;
+static const char *RCSID = "@(#) $Header: /home/jim/perl-aol-cvs-repo-backups/perl-aol/nsperl/nsperl.c,v 1.7 2000/12/11 12:36:32 jwl Exp $, compiled: " __DATE__ " " __TIME__;
 
 #include "ns.h"
 
@@ -239,41 +239,74 @@ int do_perl(void *context, Ns_Conn *conn)
       Ns_DString sendMe;
       char *sendStr;
 
-      Ns_DStringInit(&scriptPath);
+      if(aTHX)
+	{
+	  Ns_DStringInit(&scriptPath);
       
-      Ns_UrlToFile(&scriptPath, hServer, theReq->url);
+	  Ns_UrlToFile(&scriptPath, hServer, theReq->url);
       
-      embedding[2] = Ns_DStringValue(&scriptPath);
+	  embedding[2] = Ns_DStringValue(&scriptPath);
 
-      perl_construct(aTHX);
+	  perl_construct(aTHX);
       
-      perl_parse(aTHX_ xs_init, 2, embedding, NULL);
+	  perl_parse(aTHX_ xs_init, 2, embedding, NULL);
 
-      /* add lines to store conn (an Ns_Conn *) in the perl interp */
+	  /* add lines to store conn (an Ns_Conn *) in the perl interp */
 
-      {
-	SV *theConnVar = get_sv("Aolserver::Ns_Conn::theConn", TRUE);
-	SV **hashValue;
-	HV *theStash;
-	GV *theConnGlob;
+#ifdef SKIP
+	  {
+	    SV *theConnVar = get_sv("Aolserver::Ns_Conn::theConn", TRUE);
+	    SV **hashValue;
+	    HV *theStash;
+	    GV *theConnGlob;
 
-	sv_setsv
-	  (
-	    theConnVar,
-	    NsConnOutputMap(conn, "Aolserver::Ns_Conn")
-	  );
+	    sv_setsv
+	      (
+	        theConnVar,
+	        NsConnOutputMap(conn, "Aolserver::Ns_Conn")
+	      );
 
-	theStash = SvSTASH(SvRV(theConnVar));
-	hashValue = hv_fetch(theStash, "theConn", 7, FALSE);
-	theConnGlob = (GV *) *hashValue;
-	GvMULTI_on(theConnGlob);
-      }
+	    theStash = SvSTASH(SvRV(theConnVar));
+	    hashValue = hv_fetch(theStash, "theConn", 7, FALSE);
+	    theConnGlob = (GV *) *hashValue;
+	    GvMULTI_on(theConnGlob);
+	  }
+#else
+	  sv_setsv
+	    (
+	      get_sv("Aolserver::Ns_Conn::theConn", TRUE /* | GV_ADDMULTI */),
+	      NsConnOutputMap(conn, "Aolserver::Ns_Conn")
+	    );
+#endif
+
+	  perl_run(aTHX);
+	  
+	  perl_destruct(aTHX);
+	  perl_free(aTHX);
+	}
+      else
+	{
+	  Ns_DString sendMe;
+	  char *sendStr;
+	  /* the perl interpreter could not be allocated */
+
+	  Ns_DStringInit(&sendMe);
       
-
-      perl_run(aTHX);
-
-      perl_destruct(aTHX);
-      perl_free(aTHX);
+	  Ns_DStringAppend(&sendMe, "<html>\n");
+	  Ns_DStringAppend(&sendMe, "  <head>\n");
+	  Ns_DStringAppend(&sendMe, "    <title>406: can't alloc</title>\n");
+	  Ns_DStringAppend(&sendMe, "  </head>\n");
+	  Ns_DStringAppend(&sendMe, "  <body>\n");
+	  Ns_DStringAppend(&sendMe, "    <h1>406:</h1> cannot obtain ");
+	  Ns_DStringAppend(&sendMe, "perl interpreter from system.\n");
+	  Ns_DStringAppend(&sendMe, "  </body>\n");
+	  Ns_DStringAppend(&sendMe, "</html>\n");
+	  
+	  sendStr = Ns_DStringValue(&sendMe);
+	  
+	  Ns_ConnReturnHtml(conn, 406, sendStr, -1);
+	  result = NS_ERROR;
+	}
     }
   else if(Ns_UrlIsDir(hServer, theReq->url))
     {
