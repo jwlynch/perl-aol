@@ -11,7 +11,7 @@ all: stamp-nsperl stamp-perlmodules
 stamp-perlmodules:
 	for i in $(PERLMODULES); \
 	do \
-	    (cd Aolserver/$i; \
+	    (cd Aolserver/$$i; \
 	     $(PERL) Makefile.PL; \
 	     $(MAKE) ) ; \
 	done
