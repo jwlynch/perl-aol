@@ -9,26 +9,7 @@ not_here(char *s)
     return -1;
 }
 
-static double
-constant(char *name, int arg)
-{
-    errno = 0;
-    switch (*name) {
-    }
-    errno = EINVAL;
-    return 0;
-
-not_there:
-    errno = ENOENT;
-    return 0;
-}
-
-
 MODULE = Aolserver::Ns_DbHandle		PACKAGE = Aolserver::Ns_DbHandle		
 
 
-double
-constant(name,arg)
-	char *		name
-	int		arg
 
