@@ -2,13 +2,19 @@ Makefile: Makefile.PL
 	$(PERL) Makefile.PL
 
 Makefile.PL:
-	echo "use ExtUtils::MakeMaker;" > Makefile.PL
-	echo "# See lib/ExtUtils/MakeMaker.pm for details of how to influence" >> Makefile.PL
-	echo "# the contents of the Makefile that is written." >> Makefile.PL
-	echo "WriteMakefile(" >> Makefile.PL
-	echo "    'NAME'	=> 'Aolserver::Ns_Set'," >> Makefile.PL
-	echo "    'VERSION_FROM' => 'Ns_Set.pm', # finds $VERSION" >> Makefile.PL
-	echo "    'LIBS'	=> [''],   # e.g., '-lm' " >> Makefile.PL
-	echo "    'DEFINE'	=> '',     # e.g., '-DHAVE_SOMETHING' " >> Makefile.PL
-	echo "    'INC'	=> '-I$(NSHOME)/include',     # e.g., '-I/usr/include/other' " >> Makefile.PL
-	echo ");" >> Makefile.PL
+	rm -f Makefile.PL
+	(echo "use ExtUtils::MakeMaker;";\
+	echo "# See lib/ExtUtils/MakeMaker.pm for details of how to influence";\
+	echo "# the contents of the Makefile that is written.";\
+	echo "WriteMakefile(";\
+	echo "    'NAME'	=> 'Aolserver::Ns_Set',";\
+	echo "    'VERSION_FROM' => 'Ns_Set.pm', # finds $VERSION";\
+	echo "    'LIBS'	=> [''],   # e.g., '-lm' ";\
+	echo "    'DEFINE'	=> '',     # e.g., '-DHAVE_SOMETHING' ";\
+	echo "    'INC'	=> '-I$(NSHOME)/include',     # e.g., '-I/usr/include/other' ";\
+	echo ");") > Makefile.PL
+
+clean: Makefile
+	make -f Makefile clean
+	rm -f Makefile.PL
+

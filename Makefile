@@ -1,9 +1,9 @@
 export PERL_AOL := $(shell pwd)
-export PERL := perl-thread
+export PERL := /usr/local/perl-5.6.0/bin/perl
 export PERLCONFIG := $(PERL) $(PERL_AOL)/perl-config
-export LIBPERL := libperl.a
+export LIBPERL := libperl.so
 
-export NSHOME := /usr/lib/aolserver
+export NSHOME := /usr/local/aolserver
 PERLMODULES := Ns_Conn Ns_DbHandle Ns_DString Ns_Request Ns_Set
 
 all: stamp-nsperl stamp-perlmodules
@@ -23,6 +23,19 @@ stamp-nsperl: nsperl/nsperl.so
 nsperl/nsperl.so: 
 	cd nsperl; $(MAKE)
 
+pmclean:
+	for i in $(PERLMODULES); \
+	do \
+	    (cd Aolserver/$$i; \
+	     $(MAKE) -f Makefile.outer clean) ; \
+	done
+	rm -f stamp-perlmodules
+
+nspclean:
+	cd nsperl; $(MAKE) clean
+	rm -f stamp-nsperl
+
+clean: pmclean nspclean
 
 install: all
 	for i in $(PERLMODULES); \
