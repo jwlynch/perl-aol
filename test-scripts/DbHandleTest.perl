@@ -38,7 +38,6 @@ sub StringifySet
 $out = "";
 
 {
-    my $set;
     my $h = "testing";
     $conn = $Aolserver::Ns_Conn::theConn;
 
@@ -49,9 +48,20 @@ $out = "";
 	$out .= "selecting... here is the initial set:\n";
 	$set = $h->Select("select * from a");
 
-	$h->GetRow($set);
-	
-	$out .= StringifySet($set);
+	if($h->InSelectLoop())
+	{
+	    $rowStat = $h->GetRow($set);
+
+	    while($rowStat == 0)
+	    {
+		$out .= StringifySet($set);
+		$rowStat = $h->GetRow($set);
+	    }
+	}
+	else
+	{
+	    $out .= "did not get a set from Select\n";
+	}
 
 	$h->DESTROY();
     }
