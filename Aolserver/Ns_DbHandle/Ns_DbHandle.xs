@@ -171,7 +171,7 @@ GetRow(handlePerlRef, row)
 	    //      so make perl forget about it.
 
 	    if(RETVAL == NS_END_DATA || RETVAL == NS_ERROR)
-	      NsDbHandleStoreSelectRow(ST(0), NULL);
+	      NsDbHandleStoreSelectRow(handlePerlRef, NULL);
 	  }
     OUTPUT:
 	RETVAL
