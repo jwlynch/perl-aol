@@ -14,6 +14,7 @@ SV *NsDbHandleOutputMap(Ns_DbHandle *var, char *class);
 SV *NsDbHandleGetSelectRow(SV *dbHandlePerlRef);
 void NsDbHandleStoreSelectRow(SV *dbHandlePerlRef, Ns_Set *selectRowSet);
 int NsDbHandleIsInSelectLoop(SV *dbHandlePerlRef);
+int NsDbHandleSameAsSelectRow(SV *nsSetPerlRef);
 
 //SV *GetHeaders(SV *connPerlRef);
 //SV *GetOutputHeaders(SV *connPerlRef);

@@ -162,6 +162,14 @@ int NsDbHandleIsInSelectLoop(SV *dbHandlePerlRef)
   return ! NsSetIsNull(NsDbHandleGetSelectRow(dbHandlePerlRef));
 }
 
+// returns true if the ref argument is to the 
+// stored select row in the given handle
+
+int NsDbHandleSameAsSelectRow(SV *dbHandlePerlRef, SV *nsSetPerlRef)
+{
+  return SvRV(nsSetPerlRef) == SvRV(NsDbHandleGetSelectRow(dbHandlePerlRef));
+}
+
 // these are copied from a different module; they are here acting as templates
 
 //// outputs the stored ref to the Ns_Set, takes the ref to the conn as input
