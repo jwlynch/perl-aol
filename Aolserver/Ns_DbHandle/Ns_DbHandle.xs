@@ -45,7 +45,8 @@ GetOneRowAtMost(handle, sql, nrows)
     CODE:
 	RETVAL = Ns_Db0or1Row(handle, sql, &nrows);
     OUTPUT:
-	RETVAL, nrows
+	RETVAL
+	nrows
 
 Ns_Set *
 GetOneRow(handle, sql)
@@ -108,7 +109,7 @@ GetRow(handle, row)
 	RETVAL
 
 int
-InterpretSqlFile
+InterpretSqlFile(handle, filename)
 	Ns_DbHandle *	handle
 	char *		filename
     CODE:
