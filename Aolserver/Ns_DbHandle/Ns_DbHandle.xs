@@ -50,7 +50,7 @@ GetOneRowAtMost(handlePerlRef, sql, nrows)
 	{
 	  RETVAL = NULL;
 	  Ns_DbCancel(handle);
-	  NsDbHandleStoreSelectLoop(handlePerlRef, (Ns_Set *) NULL);
+	  NsDbHandleStoreSelectRow(handlePerlRef, (Ns_Set *) NULL);
 	}
 	else
 	{
@@ -97,7 +97,7 @@ Cancel(handlePerlRef)
 	if(NsDbHandleIsInSelectLoop(handlePerlRef))
 	{
 	  RETVAL = Ns_DbCancel(handle);
-	  NsDbHandleStoreSelectLoop(handlePerlRef, (Ns_Set *) NULL);
+	  NsDbHandleStoreSelectRow(handlePerlRef, (Ns_Set *) NULL);
 	}
 	else
 	{
@@ -117,7 +117,7 @@ ExecDML(handlePerlRef, sql)
 	{
 	  RETVAL = NS_ERROR;
 	  Ns_DbCancel(handle);
-	  NsDbHandleStoreSelectLoop(handlePerlRef, (Ns_Set *) NULL);
+	  NsDbHandleStoreSelectRow(handlePerlRef, (Ns_Set *) NULL);
 	}
 	else
 	{
