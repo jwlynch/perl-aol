@@ -10,6 +10,22 @@ not_here(char *s)
 }
 
 MODULE = Aolserver::Ns_DbHandle		PACKAGE = Aolserver::Ns_DbHandle		
+Ns_DbHandle *
+new(class, pool)
+	char *		class
+	char *		pool
+    CODE:
+	RETVAL = Ns_DbPoolGetHandle(pool);
+	if (RETVAL)
+	{
+	    ST(0) = sv_newmortal();
+	    sv_setsv(ST(0), NsDbHandleOutputMap(RETVAL, class));
+	}
+	else
+	{
+	    ST(0) = &PL_sv_undef;
+	}
+
 
 Ns_Set *
 GetOneRowAtMost(handle, sql, nrows)
@@ -99,3 +115,9 @@ Select(handle, sql)
     OUTPUT:
 	RETVAL
 
+void
+DESTROY(self)
+	Ns_DbHandle *	self
+    CODE:
+	if(! NsDbHandleIsNull(self))
+	  Ns_DbPoolPutHandle(self);
