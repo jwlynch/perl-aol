@@ -67,7 +67,7 @@ It must be in perl-aol/ and can be run as:
 
    /path/to/special/perl /path/to/perl-aol/perl-config <option>
 
-where <option> is one of --cflags, --libs or --includes.
+where <option> is one of --cflags, --libs, --archdir or --includes.
 
 It outputs command line options to a C compiler, or a pathname, 
 depending on its argument.
