@@ -106,6 +106,13 @@ GetRow(handle, row)
 	Ns_Set *	row
     CODE:
 	RETVAL = Ns_DbGetRow(handle, row);
+
+	//   if last row already gotten OR an error occured,
+	// then the presumption is that the row is not valid,
+	//      so make perl forget about it.
+
+	if(RETVAL == NS_END_DATA || RETVAL == NS_ERROR)
+	  StoreSelectRow(ST(0), NULL);
     OUTPUT:
 	RETVAL
 
