@@ -2,6 +2,16 @@
 #include "perl.h"
 #include "XSUB.h"
 
+#include <nsthread.h>
+#include <tcl.h>
+#include <ns.h>
+
+#include <stdio.h>
+
+#include "Ns_DbHandleMaps.h"
+#include "../Ns_DString/Ns_DStringMaps.h"
+#include "../Ns_Set/Ns_SetMaps.h"
+
 static int
 not_here(char *s)
 {
