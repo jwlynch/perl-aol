@@ -205,6 +205,8 @@ SV *
 Select(handlePerlRef, sql)
 	SV *	handlePerlRef
 	char *	sql
+    PREINIT:
+	Ns_DbHandle *handle = NsDbHandleInputMap(handlePerlRef);
     CODE:
 	RETVAL = &PL_sv_undef;
 
@@ -214,14 +216,20 @@ Select(handlePerlRef, sql)
             sv_derived_from(handlePerlRef, "Aolserver::Ns_DbHandle")
 	  )
 	{
-	  Ns_DbHandle *handle;
 	  Ns_Set *selectRow;
 
-	  handle = NsDbHandleInputMap(handlePerlRef);
-	  selectRow = Ns_DbSelect(handle, sql);
-	  NsDbHandleStoreSelectRow(handlePerlRef, selectRow);
-	  RETVAL = 
-             sv_mortalcopy( NsDbHandleGetSelectRow(handlePerlRef) );
+	  if(! NsDbHandleIsInSelectLoop(handlePerlRef))
+	    {
+	      selectRow = Ns_DbSelect(handle, sql);
+	      NsDbHandleStoreSelectRow(handlePerlRef, selectRow);
+	      RETVAL = 
+                sv_mortalcopy( NsDbHandleGetSelectRow(handlePerlRef) );
+	    }
+	  else
+	    {
+	      Ns_DbCancel(handle);
+	      NsDbHandleStoreSelectRow(handlePerlRef, (Ns_Set *) NULL);
+	    }
 	}
     OUTPUT:
 	RETVAL
