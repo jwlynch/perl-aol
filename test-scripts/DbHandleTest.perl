@@ -41,55 +41,15 @@ $out = "";
     my $h = "testing";
     $conn = $Aolserver::Ns_Conn::theConn;
 
-    $h = new Aolserver::Ns_DbHandle("jim");
+    $h = new Aolserver::Ns_DbHandle("main");
 
     if($h)
     {
 	$out .= "selecting... here is the initial set:\n";
 	$set = $h->Select("select * from a");
-	if($set)
-	{
-	  $out .= "set looks like $set\n";
-	}
-	else
-	{
-	  $out .= "Select() returned undef\n";
-	}
 
-	$out .= "\nkeys are: " . join(", ", keys %$h) . "\n";
-	$out .= "the set structure looks like |" . ${$h}{selectRowSet} . "|\n";
-	$out .= "the value of that scalar is " . ${${$h}{selectRowSet}} . "\n";
+	$h->GetRow($set);	
 
-	$out .= "the handle looks like |" . ${$h}{theNs_DbHandle} . "|\n";
-
-	$out .= "\nthe conn looks like |" . $conn . "|\n";
-	$out .= "keys are: " . join(", ", keys %$conn) . "\n";
-	$out .= "the conn looks like |" . ${$conn}{theNs_Conn} . "|\n";
-
-	$out .= "\ntesting the selectRow placeholder:\n";
-	$out .= "the handle is ";
-	$out .= "not "
-	    unless( $h->InSelectLoop() );
-	$out .= "in select loop.\n";
-	#$out .= "the select row looks like " . $h->GetSelectRow() . "\n";
-	$h->SetSelectRow(42);
-	$out .= "the handle is ";
-	$out .= "not "
-	    unless( $h->InSelectLoop() );
-	$out .= "in select loop.\n";
-	$out .= "the value of that scalar is " . ${$h->GetSelectRow()} . "\n";
-
-	$h->SetSelectRow(0);
-	$out .= "the handle is ";
-	$out .= "not "
-	    unless( $h->InSelectLoop() );
-	$out .= "in select loop.\n";
-	$a = $h->GetSelectRow();
-	$b = $h->GetSelectRow();
-	$c = $h->GetSelectRow();
-	$out .= "the rows are:\naaa $a\nbbb $b\nccc $c\n";
-	$out .= "the select row looks like " . $h->GetSelectRow() . "\n";
-	$out .= "the select row looks like " . $h->GetSelectRow() . "\n";
 	$h->DESTROY();
     }
 
