@@ -1,5 +1,5 @@
 #
-# $Header: /home/jim/perl-aol-cvs-repo-backups/perl-aol/nsperl/Makefile,v 1.7 2000/12/02 04:29:12 jwl Exp $
+# $Header: /home/jim/perl-aol-cvs-repo-backups/perl-aol/nsperl/Makefile,v 1.8 2000/12/24 03:34:29 jwl Exp $
 #
 # nsexample --
 #
@@ -27,8 +27,9 @@ PERL_AOL = ..
 #
 #  Usually, you have to build a somewhat specially configured perl
 #  and therefore install it in a place that is usually not searched
-#  by general users. However, when building this module, the perl
-#  you wish to build with must be found first in the path.
+#  by general users. The $PERLCONFIG var comes from the top level
+#  makefile, and uses the perl whose location is also specified
+#  therein.
 #
 
 PLIBS   = $(LIBS) -L$(shell $(PERLCONFIG) --libs) -lperl
