@@ -1,0 +1,18 @@
+Makefile: Makefile.PL
+	$(PERL) Makefile.PL
+
+Makefile.PL:
+	echo "use ExtUtils::MakeMaker;" > Makefile.PL
+	echo "# See lib/ExtUtils/MakeMaker.pm for details of how to influence" >> Makefile.PL
+	echo "# the contents of the Makefile that is written." >> Makefile.PL
+	echo  >> Makefile.PL
+	echo "@theTypemaps = (\"../Ns_DString/typemap\", \"../Ns_Set/typemap\");" >> Makefile.PL
+	echo  >> Makefile.PL
+	echo "WriteMakefile(" >> Makefile.PL
+	echo "    'NAME'	=> 'Aolserver::Ns_DbHandle'," >> Makefile.PL
+	echo "    'VERSION_FROM' => 'Ns_DbHandle.pm', # finds $VERSION" >> Makefile.PL
+	echo "    'LIBS'	=> [''],   # e.g., '-lm' " >> Makefile.PL
+	echo "    'DEFINE'	=> '',     # e.g., '-DHAVE_SOMETHING' " >> Makefile.PL
+	echo "    'INC'	=> '-I$(NSHOME)/include',     # e.g., '-I/usr/include/other' " >> Makefile.PL
+	echo "    'TYPEMAPS'	=> \@theTypemaps," >> Makefile.PL
+	echo ");" >> Makefile.PL
