@@ -40,8 +40,6 @@ int NsSetIsNull(SV *arg)
 
 void NsSetMakeNull(SV *arg)
 {
-  dTHX;
-  
   NsSetStore(arg, NULL);
 }
 
@@ -49,7 +47,7 @@ SV *NsSetOutputMap(Ns_Set *var, char *class)
 {
   dTHX;
   SV *sviv = newSViv( (IV) var );
-  SV *arg = newRV_inc( sviv );
+  SV *arg = newRV_noinc( sviv );
 
   sv_bless(arg, gv_stashpv(class, TRUE));
 
@@ -58,6 +56,8 @@ SV *NsSetOutputMap(Ns_Set *var, char *class)
 
 void NsSetStore(SV *setPerlRef, Ns_Set *set)
 {
+  dTHX;
+  
   sv_setiv(SvRV(setPerlRef), (IV) set);
 }
 
