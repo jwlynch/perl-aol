@@ -219,16 +219,16 @@ DESTROY(self)
     PREINIT:
 	SV *sviv = SvRV(self);
     CODE:
-	fprintf(stderr, "Ns_Set::DESTROY(%p) called: ", sviv);
-	if(! NsSetIsNull(self))
-	{
-	  Ns_Set *tmp = NsSetInputMap(self, "Aolserver::Ns_Set", "self");
-    	  Ns_SetFree(tmp);
-	  NsSetMakeNull(self);
-	  fprintf(stderr, "NOT null. freeing set at %p.\n", tmp);
-	}
-	else
-	{
-	  fprintf(stderr, "IS null. NOT freeing.\n");
-	}
+#	fprintf(stderr, "Ns_Set::DESTROY(%p) called: ", sviv);
+#	if(! NsSetIsNull(self))
+#	{
+#	  Ns_Set *tmp = NsSetInputMap(self, "Aolserver::Ns_Set", "self");
+#    	  Ns_SetFree(tmp);
+#	  NsSetMakeNull(self);
+#	  fprintf(stderr, "NOT null. freeing set at %p.\n", tmp);
+#	}
+#	else
+#	{
+#	  fprintf(stderr, "IS null. NOT freeing.\n");
+#	}
 
