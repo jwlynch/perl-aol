@@ -1,0 +1,7 @@
+Changes
+MANIFEST
+Makefile.PL
+Ns_Set.pm
+Ns_Set.xs
+Ns_SetMaps.c
+Ns_SetMaps.h
