@@ -21,34 +21,42 @@ MODULE = Aolserver::Ns_Set		PACKAGE = Aolserver::Ns_Set
 # perl module encapsulating Aolserver's Ns_Set
 
 
-Ns_Set *
+SV *
 new(class)
 	char *		class
+    PREINIT:
+	Ns_Set *theSet;
     CODE:
-	RETVAL = Ns_SetCreate("");
-	if (RETVAL)
+	theSet = Ns_SetCreate("");
+	if (theSet)
 	{
-	    ST(0) = sv_2mortal( NsSetOutputMap(RETVAL, class) );
+	    RETVAL = sv_2mortal( NsSetOutputMap(theSet, class) );
 	}
 	else
 	{
-	    ST(0) = &PL_sv_undef;
+	    RETVAL = &PL_sv_undef;
 	}
+    OUTPUT:	
+	RETVAL
 
-Ns_Set *
+SV *
 newNamed(class, name)
 	char *		class
 	char *		name
+    PREINIT:
+	Ns_Set *theSet;
     CODE:
-	RETVAL = Ns_SetCreate(name);
-	if (RETVAL)
+	theSet = Ns_SetCreate(name);
+	if (theSet)
 	{
-	    ST(0) = sv_2mortal( NsSetOutputMap(RETVAL, class) );
+	    RETVAL = sv_2mortal( NsSetOutputMap(theSet, class) );
 	}
 	else
 	{
-	    ST(0) = &PL_sv_undef;
+	    RETVAL = &PL_sv_undef;
 	}
+    OUTPUT:	
+	RETVAL
 
 int
 Put(self, key, value)
