@@ -39,22 +39,44 @@ new(class, pool)
 
 
 Ns_Set *
-GetOneRowAtMost(handle, sql, nrows)
-	Ns_DbHandle *	handle
+GetOneRowAtMost(handlePerlRef, sql, nrows)
+	SV *	handlePerlRef
 	char *		sql
 	int		nrows
+    PREINIT:
+	Ns_DbHandle *handle = NsDbHandleInputMap(handlePerlRef);
     CODE:
-	RETVAL = Ns_Db0or1Row(handle, sql, &nrows);
+	if(NsDbHandleIsInSelectLoop(handlePerlRef))
+	{
+	  RETVAL = NULL;
+	  Ns_DbCancel(handle);
+	  NsDbHandleStoreSelectLoop(handlePerlRef, (Ns_Set *) NULL);
+	}
+	else
+	{
+	  RETVAL = Ns_Db0or1Row(handle, sql, &nrows);
+	}
     OUTPUT:
 	RETVAL
 	nrows
 
 Ns_Set *
-GetOneRow(handle, sql)
-	Ns_DbHandle *	handle
+GetOneRow(handlePerlRef, sql)
+	SV *	handlePerlRef
 	char *		sql
+    PREINIT:
+	Ns_DbHandle *handle = NsDbHandleInputMap(handlePerlRef);
     CODE:
-	RETVAL = Ns_Db1Row(handle, sql);
+	if(NsDbHandleIsInSelectLoop(handlePerlRef))
+	{
+	  RETVAL = NULL;
+	  Ns_DbCancel(handle);
+	  NsDbHandleStoreSelectLoop(handlePerlRef, (Ns_Set *) NULL);
+	}
+	else
+	{
+	  RETVAL = Ns_Db1Row(handle, sql);
+	}
     OUTPUT:
 	RETVAL
 
@@ -67,19 +89,40 @@ BindRow(handle)
 	RETVAL
 
 int
-Cancel(handle)
-	Ns_DbHandle *	handle
+Cancel(handlePerlRef)
+	SV *	handlePerlRef
+    PREINIT:
+	Ns_DbHandle *handle = NsDbHandleInputMap(handlePerlRef);
     CODE:
-	RETVAL = Ns_DbCancel(handle);
+	if(NsDbHandleIsInSelectLoop(handlePerlRef))
+	{
+	  RETVAL = Ns_DbCancel(handle);
+	  NsDbHandleStoreSelectLoop(handlePerlRef, (Ns_Set *) NULL);
+	}
+	else
+	{
+	  RETVAL = NS_OK; // you can call Cancel as many times as you want
+	}
     OUTPUT:
 	RETVAL
 
 int
 ExecDML(handle, sql)
-	Ns_DbHandle *	handle
+	SV *	handlePerlRef
 	char *		sql
+    PREINIT:
+	Ns_DbHandle *handle = NsDbHandleInputMap(handlePerlRef);
     CODE:
-	RETVAL = Ns_DbDML(handle, sql);
+	if(NsDbHandleIsInSelectLoop(handlePerlRef))
+	{
+	  RETVAL = NS_ERROR;
+	  Ns_DbCancel(handle);
+	  NsDbHandleStoreSelectLoop(handlePerlRef, (Ns_Set *) NULL);
+	}
+	else
+	{
+	  RETVAL = Ns_DbDML(handle, sql);
+	}
     OUTPUT:
 	RETVAL
 
@@ -93,10 +136,20 @@ Exec(handle, sql)
 	RETVAL
 
 int
-Flush(handle)
-	Ns_DbHandle *	handle
+Flush(handlePerlRef)
+	SV *	handlePerlRef
+    PREINIT:
+	Ns_DbHandle *handle = NsDbHandleInputMap(handlePerlRef);
     CODE:
-	RETVAL = Ns_DbFlush(handle);
+	if(NsDbHandleIsInSelectLoop(handlePerlRef))
+	{
+	  RETVAL = Ns_DbFlush(handle);
+	  NsDbHandleStoreSelectLoop(handlePerlRef, (Ns_Set *) NULL);
+	}
+	else
+	{
+	  RETVAL = NS_OK; // you can call Flush as many times as you want
+	}
     OUTPUT:
 	RETVAL
 
@@ -147,12 +200,6 @@ GetSelectRow(handlePerlRef)
 	RETVAL = sv_mortalcopy( NsDbHandleGetSelectRow(handlePerlRef) );
     OUTPUT:
 	RETVAL
-
-void SetSelectRow(handlePerlRef, value)
-	SV *	handlePerlRef
-	int	value
-    CODE:
-	NsDbHandleStoreSelectRow(handlePerlRef, value);
 
 SV *
 Select(handlePerlRef, sql)
