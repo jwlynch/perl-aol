@@ -3,4 +3,6 @@ MANIFEST
 Makefile.PL
 Ns_DbHandle.pm
 Ns_DbHandle.xs
+Ns_DbHandleMaps.c
+Ns_DbHandleMaps.h
 test.pl
