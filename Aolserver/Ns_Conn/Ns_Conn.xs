@@ -2,6 +2,8 @@
 #include "perl.h"
 #include "XSUB.h"
 
+#include "logging.h"
+
 #include <nsthread.h>
 #include <tcl.h>
 #include <ns.h>
@@ -41,11 +43,11 @@ new(class)
 	    /* but HOW?? so don't use new()       */
 
 	    ST(0) = sv_newmortal();
-            fprintf(stderr, "addr of newmortal is %p\n", ST(0));
-            fprintf(stderr, "refcount of newmortal is %d\n", SvREFCNT(ST(0)));
+            LOG(StringF("addr of newmortal is %p\n", ST(0)));
+            LOG(StringF("refcount of newmortal is %d\n", SvREFCNT(ST(0))));
 	    sv_setref_pv(ST(0), class, (void*) RETVAL);
-            fprintf(stderr, "addr of ST(0) is %p\n", ST(0));
-            fprintf(stderr, "refcount of ST(0) is %d\n", SvREFCNT(ST(0)));
+            LOG(StringF("addr of ST(0) is %p\n", ST(0)));
+            LOG(StringF("refcount of ST(0) is %d\n", SvREFCNT(ST(0))));
 	}
 	else
 	{
@@ -548,13 +550,24 @@ ModifiedSince(conn, mtime)
     OUTPUT:
 	RETVAL
 
-char *
+SV *
 Peer(conn)
 	Ns_Conn *	conn
+    PREINIT:
+	char *nscPeerResult = NULL;
     CODE:
-	RETVAL = Ns_ConnPeer(conn);
+	nscPeerResult = Ns_ConnPeer(conn);
+
+	if(nscPeerResult != NULL)
+	  {
+	    RETVAL = sv_2mortal(newSVpv(nscPeerResult, 0));
+	  }
+	else
+	  {
+	    RETVAL = &PL_sv_undef;
+	  }
     OUTPUT:
-	RETVAL
+        RETVAL
 
 int
 PeerPort(conn)
@@ -682,13 +695,32 @@ SendFp(conn, fp, len)
     OUTPUT:
 	RETVAL
 
-char *
+SV *
 Server(conn)
 	Ns_Conn *	conn
+    PREINIT:
+	char *nscServerResult = NULL;
     CODE:
-	RETVAL = Ns_ConnServer(conn);
+	nscServerResult = Ns_ConnServer(conn);
+
+	if(nscServerResult != NULL)
+	  {
+	    RETVAL = sv_2mortal(newSVpv(nscServerResult, 0));
+	  }
+	else
+	  {
+	    RETVAL = &PL_sv_undef;
+	  }
     OUTPUT:
-	RETVAL
+        RETVAL
+
+#char *
+#Server(conn)
+#	Ns_Conn *	conn
+#    CODE:
+#	RETVAL = Ns_ConnServer(conn);
+#    OUTPUT:
+#	RETVAL
 
 int
 Write(conn, buf, len)
@@ -714,7 +746,4 @@ void
 DESTROY(connPerlRef)
 	SV *	connPerlRef
     CODE:
-        fprintf(stderr, "DESTROY Ns_Conn at %p\n", connPerlRef);
-	fprintf(stderr, " - NsConnMakeNull(connPerlRef);\n");
-	fflush(stderr);
-	//NsConnMakeNull(connPerlRef);
+        LOG(StringF("DESTROY Ns_Conn at %p\n", connPerlRef));

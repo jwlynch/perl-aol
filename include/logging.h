@@ -78,14 +78,16 @@ char *StringF(char *format, ...);
 
 #define STREAM stderr
 
-#define LOG(s)                                            \
-if(1)                                                     \
-{                                                         \
-  fprintf(STREAM, "%s:%d: %s", __FILE__, __LINE__, (s));  \
-  free(s);                                                \
-  fflush(STREAM);                                         \
-}                                                         \
+#define LOG(s)                                              \
+if(1)                                                       \
+{                                                           \
+  fprintf(STREAM, "%s:%d: %s\n", __FILE__, __LINE__, (s));  \
+  free(s);                                                  \
+  fflush(STREAM);                                           \
+}                                                           \
 else
+
+// (See Holub's "The C Companion", chapter on preprocessor, for why the if)
 
 #endif
 

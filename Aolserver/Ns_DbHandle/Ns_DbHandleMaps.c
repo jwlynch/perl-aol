@@ -16,6 +16,7 @@
 #include "EXTERN.h"
 #include "perl.h"
 #include "XSUB.h"
+#include "logging.h"
 
 #include "../Ns_Set/Ns_SetMaps.h"
 #include "../Ns_DString/Ns_DStringMaps.h"

@@ -16,7 +16,7 @@ Ns_DString *
 new(class)
 	char *		class
     CODE:
-        LOG(StringF("Ns_DString new:\n");
+        LOG(StringF("Ns_DString new:\n"));
 	RETVAL = malloc(sizeof(Ns_DString));
 	if (RETVAL)
 	{

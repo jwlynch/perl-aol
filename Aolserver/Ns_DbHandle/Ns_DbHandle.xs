@@ -2,6 +2,8 @@
 #include "perl.h"
 #include "XSUB.h"
 
+#include "logging.h"
+
 #include <nsthread.h>
 #include <tcl.h>
 #include <ns.h>
@@ -30,11 +32,12 @@ new(class, pool)
 	if (RETVAL)
 	{
 	    ST(0) = sv_2mortal( NsDbHandleOutputMap(RETVAL, class) );
-            fprintf(stderr, "Ns_DbHandlem allocated\n");
+            LOG(StringF("Ns_DbHandle allocated\n"));
 	}
 	else
 	{
 	    ST(0) = &PL_sv_undef;
+            LOG(StringF("Ns_DbHandle could not be allocated\n"));
 	}
 
 
@@ -251,11 +254,11 @@ DESTROY(handlePerlRef)
     PREINIT:
 	Ns_DbHandle *handle = NsDbHandleInputMap(handlePerlRef);
     CODE:
-	//if(NsDbHandleIsInSelectLoop(handlePerlRef))
-	//{
-	//  NsDbHandleStoreSelectRow(handlePerlRef, (Ns_Set *) NULL);
-	//  Ns_DbCancel(handle);
-	//}
-	//
-	//Ns_DbPoolPutHandle(handle);
-        //fprintf(stderr, "Ns_DbHandle returned and freed\n");
+	if(NsDbHandleIsInSelectLoop(handlePerlRef))
+	{
+	  NsDbHandleStoreSelectRow(handlePerlRef, (Ns_Set *) NULL);
+	  Ns_DbCancel(handle);
+	}
+	
+	Ns_DbPoolPutHandle(handle);
+        LOG(StringF("Ns_DbHandle returned and freed\n"));

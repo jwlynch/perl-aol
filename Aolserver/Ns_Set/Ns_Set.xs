@@ -28,13 +28,24 @@ new(class)
     PREINIT:
 	Ns_Set *theSet;
     CODE:
+        LOG(StringF("Aolserver::Ns_Set new:\n"));
 	theSet = Ns_SetCreate("");
 	if (theSet)
 	{
 	    RETVAL = sv_2mortal( NsSetOutputMap(theSet, class) );
+	    LOG
+	      (
+	        StringF
+                  (
+                    "  - new Ns_Set %p wrapped in output mapping at %p\n",
+                    theSet,
+                    RETVAL
+                  )
+              );
 	}
 	else
 	{
+	    LOG(StringF("  - new Ns_Set could not be created by aolserver\n"));
 	    RETVAL = &PL_sv_undef;
 	}
     OUTPUT:	
@@ -220,16 +231,16 @@ DESTROY(self)
     PREINIT:
 	SV *sviv = SvRV(self);
     CODE:
-	LOG(StringF("Ns_Set::DESTROY(%p) called: ", sviv));
-	//if(! NsSetIsNull(self))
-	//{
-	//  Ns_Set *tmp = NsSetInputMap(self, "Aolserver::Ns_Set", "self");
-    	//  Ns_SetFree(tmp);
-	//  NsSetMakeNull(self);
-	//  LOG(StringF("NOT null. freeing set at %p.\n", tmp));
-	//}
-	//else
-	//{
-	//  LOG(StringF("IS null. NOT freeing.\n"));
-	//}
+	LOG(StringF("Ns_Set::DESTROY(%p) (refs to %p) called:", self, sviv));
+	if(! NsSetIsNull(self))
+	{
+	  Ns_Set *tmp = NsSetInputMap(self, "Aolserver::Ns_Set", "self");
+    	  Ns_SetFree(tmp);
+	  NsSetMakeNull(self);
+	  LOG(StringF("  - NOT null. freeing set at %p.", tmp));
+	}
+	else
+	{
+	  LOG(StringF("  - IS null. NOT freeing."));
+	}
 

@@ -14,7 +14,7 @@ Makefile.PL:
 	echo "    'VERSION_FROM' => 'Ns_DbHandle.pm', # finds $VERSION";\
 	echo "    'LIBS'	=> [''],   # e.g., '-lm' " ;\
 	echo "    'DEFINE'	=> '',     # e.g., '-DHAVE_SOMETHING' " ;\
-	echo "    'INC'	        => '-I$(NSINCLUDE)',     # e.g., '-I/usr/include/other' ";\
+	echo "    'INC'	        => '-I$(NSINCLUDE) -I../../include',     # e.g., '-I/usr/include/other' ";\
 	echo "    'OBJECT'      => 'Ns_DbHandle.o Ns_DbHandleMaps.o',";\
 	echo "    'TYPEMAPS'	=> \\@theTypemaps,";\
 	echo ");") > Makefile.PL

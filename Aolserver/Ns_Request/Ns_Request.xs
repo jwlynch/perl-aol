@@ -2,6 +2,8 @@
 #include "perl.h"
 #include "XSUB.h"
 
+#include "logging.h"
+
 #include <nsthread.h>
 #include <tcl.h>
 #include <ns.h>
@@ -50,5 +52,28 @@ DESTROY(reqPerlRef)
     PREINIT:
 	Ns_Request *req = NsRequestInputMap(reqPerlRef);
     CODE:
+	LOG(StringF("Ns_Request:\n"));
 	if(! NsRequestIsNull(reqPerlRef))
+	{
+	  LOG
+            (
+              StringF
+                (
+                  "  - freed request at perl ref %p (internal %p)\n", 
+                  reqPerlRef, 
+                  req
+                )
+            );
 	  Ns_FreeRequest(req);
+	}
+	else
+	{
+	  LOG
+            (
+              StringF
+                (
+                  "  - request from perl ref %p not freed because null\n",
+                  reqPerlRef
+                )
+            );
+	}

@@ -1,5 +1,10 @@
 
-// reference -> SvIV -> Ns_Request
+// This is an Aolserver::Ns_Request:
+//
+// reference -> SvIV -> ram slab which is Ns_Request
+//     |
+//   blessed as
+// "Aolserver::Ns_Request"
 
 #include "EXTERN.h"
 #include "perl.h"
@@ -23,7 +28,7 @@ SV *NsRequestOutputMap(Ns_Request *var, char *class)
 {
   dTHX;
   SV *sviv = newSViv( (IV) var );
-  SV *arg = newRV_inc( sviv );
+  SV *arg = newRV_noinc( sviv );
 
   sv_bless(arg, gv_stashpv(class, TRUE));
 
@@ -38,8 +43,11 @@ int NsRequestIsNull(SV *arg)
 void NsRequestStore(SV *requestPerlRef, Ns_Request *request)
 {
   dTHX;
-  
-  sv_setiv(SvRV(requestPerlRef), (IV) request);
+
+  if(requestPerlRef != 0 && requestPerlRef != &PL_sv_undef)
+    {
+      sv_setiv(SvRV(requestPerlRef), (IV) request);
+    }
 }
 
 void NsRequestMakeNull(SV *arg)

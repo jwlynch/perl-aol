@@ -34,7 +34,7 @@
  *
  */
 
-static const char *RCSID = "@(#) $Header: /home/jim/perl-aol-cvs-repo-backups/perl-aol/nsperl/nsperl.c,v 1.16 2002/11/26 19:50:11 jwl Exp $, compiled: " __DATE__ " " __TIME__;
+static const char *RCSID = "@(#) $Header: /home/jim/perl-aol-cvs-repo-backups/perl-aol/nsperl/nsperl.c,v 1.17 2002/12/03 09:47:15 jwl Exp $, compiled: " __DATE__ " " __TIME__;
 
 #include "ns.h"
 
@@ -219,17 +219,23 @@ int do_perl(void *context, Ns_Conn *conn)
 	      );
 	    //SvREFCNT_inc( SvRV(varPtr) );
 
-fprintf(stderr, "varPtr => %ld (expect 1)\n", SvREFCNT(varPtr));
-fprintf(stderr, "connPerlRef => %ld (expect 1)\n", SvREFCNT(connPerlRef));
-fprintf(stderr, "%%{varPtr} => %ld (expect 2)\n", SvREFCNT(SvRV(varPtr)));
-            SvREFCNT_dec(connPerlRef); /* done with this */
-fprintf(stderr, "%%{varPtr} => %ld (expect 1)\n", SvREFCNT(SvRV(varPtr)));
+LOG(StringF("varPtr => %ld (expect 1)\n", SvREFCNT(varPtr)));
+LOG(StringF("connPerlRef => %ld (expect 1)\n", SvREFCNT(connPerlRef)));
+LOG(StringF("%%{varPtr} => %ld (expect 2)\n", SvREFCNT(SvRV(varPtr))));
+            SvREFCNT_dec(SvRV(varPtr)); /* done with this */
+LOG(StringF("%%{varPtr} => %ld (expect 1)\n", SvREFCNT(SvRV(varPtr))));
+LOG(StringF("connPerlRef => %ld (expect ???)\n", SvREFCNT(connPerlRef)));
 	  }
 #endif
 
+	  LOG(StringF("before running perl interp\n"));
 	  perl_run(aTHX);
+	  LOG(StringF("after running perl interp\n"));
+	  NsConnMakeNull(connPerlRef); // explicitly tear the conn out
 	  perl_destruct(aTHX);
+	  LOG(StringF("after destroying perl interp\n"));
 	  perl_free(aTHX);
+	  LOG(StringF("after freeing perl interp\n"));
 	}
       else
 	{
