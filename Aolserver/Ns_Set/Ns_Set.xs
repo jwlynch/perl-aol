@@ -45,7 +45,7 @@ newNamed(class, name)
 	if (RETVAL)
 	{
 	    ST(0) = sv_newmortal();
-	    sv_setref_pv(ST(0), class, (void*) RETVAL);
+	    sv_setsv(ST(0), NsSetOutputMap(RETVAL, class));
 	}
 	else
 	{
