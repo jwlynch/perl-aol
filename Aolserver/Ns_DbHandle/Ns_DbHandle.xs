@@ -20,6 +20,7 @@ not_here(char *s)
 }
 
 MODULE = Aolserver::Ns_DbHandle		PACKAGE = Aolserver::Ns_DbHandle		
+
 Ns_DbHandle *
 new(class, pool)
 	char *		class
@@ -131,3 +132,5 @@ DESTROY(self)
 	Ns_DbHandle *	self
     CODE:
 	Ns_DbPoolPutHandle(self);
+	fprintf(stderr, "YES the destroy method gets called\n");
+
