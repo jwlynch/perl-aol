@@ -106,6 +106,7 @@ SV *NsDbHandleOutputMap(Ns_DbHandle *var, char *class)
 SV *NsDbHandleGetSelectRow(SV *dbHandlePerlRef)
 {
   dTHX;
+  SV *result = &PL_sv_undef;
   SV **hashValue = 
        hv_fetch
          ( 
@@ -113,10 +114,11 @@ SV *NsDbHandleGetSelectRow(SV *dbHandlePerlRef)
             "selectRowSet", 12, 
             FALSE
          );
-  SV *selectRowRef = *hashValue;
-  SV *refCopy = sv_mortalcopy(selectRowRef);
 
-  return refCopy;
+  if(hashValue)
+    result = *hashValue;
+
+  return result;
 }
 
 // Store an existing Ns_Set (or a NULL pointer) into the perl infrastructure

@@ -29,8 +29,8 @@ new(class, pool)
 	RETVAL = Ns_DbPoolGetHandle(pool);
 	if (RETVAL)
 	{
-	    ST(0) = sv_newmortal();
-	    sv_setsv(ST(0), NsDbHandleOutputMap(RETVAL, class));
+	    ST(0) = 
+		sv_mortalcopy( NsDbHandleOutputMap(RETVAL, class) );
 	}
 	else
 	{
@@ -137,9 +137,7 @@ SV *
 GetSelectRow(handlePerlRef)
 	SV *	handlePerlRef
     CODE:
-	/**/fprintf(stderr, "refcnt b4 is %d\n", SvREFCNT(handlePerlRef));
-	RETVAL = NsDbHandleGetSelectRow(handlePerlRef);
-	/**/fprintf(stderr, "refcnt is %d\n", SvREFCNT(handlePerlRef));
+	RETVAL = sv_mortalcopy( NsDbHandleGetSelectRow(handlePerlRef) );
     OUTPUT:
 	RETVAL
 
@@ -167,7 +165,9 @@ Select(handlePerlRef, sql)
 	  handle = NsDbHandleInputMap(handlePerlRef);
 
 	  NsDbHandleStoreSelectRow(handlePerlRef, Ns_DbSelect(handle, sql));
-	  RETVAL = NsDbHandleGetSelectRow(handlePerlRef);
+
+	  RETVAL = 
+             sv_mortalcopy( NsDbHandleGetSelectRow(handlePerlRef) );
 	}
     OUTPUT:
 	RETVAL
