@@ -1,5 +1,5 @@
 #
-# $Header: /home/jim/perl-aol-cvs-repo-backups/perl-aol/nsperl/Makefile,v 1.4 2000/11/12 03:43:45 jwl Exp $
+# $Header: /home/jim/perl-aol-cvs-repo-backups/perl-aol/nsperl/Makefile,v 1.5 2000/11/12 06:44:44 jwl Exp $
 #
 # nsexample --
 #
@@ -33,7 +33,7 @@ NSHOME   =  /usr/local/aolserver
 
 PERLCONFIG = ../perl-config
 
-PLIBS   = $(LIBS) -L$(shell perl $(PERLCONFIG) --libs) -lperl -lcrypt
+PLIBS   = $(LIBS) -L$(shell perl $(PERLCONFIG) --libs) -lperl
 PINCLUDES = -I$(shell perl $(PERLCONFIG) --includes)
 
 CFLAGS += $(shell perl $(PERLCONFIG) --cflags)
@@ -61,7 +61,7 @@ HDRS     =
 #
 # Extra libraries
 #
-MODLIBS  =  $(shell perl $(PERLCONFIG) --archdir)/auto/DynaLoader/DynaLoader.a $(shell perl $(PERLCONFIG) --archdir)/CORE/libperl.so
+MODLIBS  =  $(shell perl $(PERLCONFIG) --archdir)/auto/DynaLoader/DynaLoader.a $(shell perl $(PERLCONFIG) --archdir)/CORE/libperl.so /usr/lib/libcrypt.a
 
 #
 # Compiler flags
