@@ -13,6 +13,8 @@
 
 #include <stdio.h>
 
+#include "Ns_SetMaps.h"
+
 Ns_Set *NsSetInputMap(SV *arg)
 {
   dTHX;
@@ -32,7 +34,7 @@ void NsSetMakeNull(SV *arg)
 {
   dTHX;
   
-  sv_setiv(SvRV(arg), 0);
+  NsSetStore(arg, NULL);
 }
 
 SV *NsSetOutputMap(Ns_Set *var, char *class)
@@ -46,4 +48,8 @@ SV *NsSetOutputMap(Ns_Set *var, char *class)
   return arg;
 }
 
+void NsSetStore(SV *setPerlRef, Ns_Set *set)
+{
+  sv_setiv(SvRV(setPerlRef), set)
+}
 
