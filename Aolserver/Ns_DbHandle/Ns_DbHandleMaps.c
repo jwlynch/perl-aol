@@ -1,10 +1,11 @@
 //
-// This is now an Aolserver::Ns_Conn:
+// This is now an Aolserver::Ns_DbHandle:
 // 
-// reference    -> hash -> {theNs_Conn}    -> SvIV -> Ns_Conn
-//      |                  {headers}       -> (set ref as def'd by its typemap)
-// blessed as              {outputheaders} -> (set ref as def'd by its typemap)
-// "Aolserver::Ns_Conn"    {request}       -> (request ref as def'd by typemap)
+// reference -> hash -> {theNs_DbHandle} -> SvIV -> Ns_Conn
+//      |               {selectRowSet}   -> (statically alloc'd set !or! NULL)
+//      |               {}               -> ()
+// blessed as           {}               -> ()
+// "Aolserver::Ns_DbHandle"
 
 #include "EXTERN.h"
 #include "perl.h"
@@ -58,14 +59,14 @@ SV *NsDbHandleOutputMap(Ns_DbHandle *var, char *class)
       0
     );
 
-  //hv_store
-  //  (
-  //    hashReferent, 
-  //    "headers", 
-  //    7, 
-  //    NsSetOutputMap(var->headers, "Aolserver::Ns_Set"),
-  //    0
-  //  );
+  hv_store
+    (
+      hashReferent, 
+      "selectRowSet", 
+      12, 
+      NULL /* initially null: means NO select is current & NO rows pending */,
+      0
+    );
 
   //hv_store
   //  (
@@ -90,20 +91,73 @@ SV *NsDbHandleOutputMap(Ns_DbHandle *var, char *class)
   return arg;
 }
 
-// outputs the stored ref to the Ns_Set, takes the ref to the conn as input
+// outputs the stored ref to the Ns_Set which is output from Ns_DbSelect 
+// !!or!! NULL if no select active; takes the ref to the dbhandle as input
 
-//SV *GetHeaders(SV *connPerlRef);
-//SV *GetHeaders(SV *connPerlRef)
-//{
-//  dTHX;
-//  SV **hashValue = hv_fetch( (HV*)SvRV(connPerlRef), "headers", 7, FALSE);
-//  
-//  return *hashValue;
-//}
+SV *GetSelectRow(SV *dbHandlePerlRef)
+{
+  dTHX;
+  SV **hashValue = 
+       hv_fetch
+         ( 
+            (HV*)SvRV(dbHandlePerlRef), 
+            "selectRowSet", 7, 
+            FALSE
+         );
+  
+  return *hashValue;
+}
+
+// Keep track of whether we are in a select loop. 
+//
+//   two possibilities:
+//     - we ARE. selectRowSet is NOT zero, and actually points to a
+//         statically allocated Ns_Set presumed to come from Select.
+//     - we are NOT. selectRowSet is zero.
+//
+//   If we are in a select loop, then provide perl infrastructure (thru
+//   NsSetOutputMap()) and store a properly reference counted structure.
+//
+//       Select() would provide an Ns_Set if no errors were encountered,
+//       and this would put us in a select loop.
+//
+//   If we are not, store a NULL where the pointer to the perl infrastructure
+//   otherwise would have been.
+//
+//       Having gotten the last row and calling GetRow "one more time"
+//       should make this null. So should the DESTROY method as well as
+//       Cancel and Flush. ALSO, calling ExecDML, GetOneRow or GetOneRowAtMost
+//       on the same handle as one which is in a select loop is an error,
+//       and causes a Flush which should also make this null.
+
+void StoreSelectRow(SV *dbHandlePerlRef, Ns_Set *selectRowSet)
+{
+  dTHX;
+  SV *selectRowSetPerlRef = NULL;
+
+  // If incoming set ptr is not null, call Aolserver::Ns_Set's output
+  // typemap to create a blessed ref to the set.........
+
+  if(selectRowSet)
+    {
+      selectRowSetPerlRef = NsSetOutputMap(selectRowSet, "Aolserver::Ns_Set");
+    }
+
+  // ....Otherwise, don't bother. The stored value will be NULL and not a set.
+
+  hv_store
+    (
+      (HV*)SvRV(dbHandlePerlRef), 
+      "selectRowSet", 
+      12, 
+      selectRowSetPerlRef,
+      0
+    );
+}
 
 
-// outputs the stored ref to the Ns_Set, takes the ref to the conn as input
-
+//// outputs the stored ref to the Ns_Set, takes the ref to the conn as input
+//
 //SV *GetOutputHeaders(SV *connPerlRef);
 //SV *GetOutputHeaders(SV *connPerlRef)
 //{
@@ -120,8 +174,8 @@ SV *NsDbHandleOutputMap(Ns_DbHandle *var, char *class)
 //  return *hashValue;
 //}
 
-// outputs the stored ref to the Ns_Request, takes the ref to the conn as input
-
+//// outputs the stored ref to the Ns_Request, takes the ref to the conn as input
+//
 //SV *GetRequest(SV *connPerlRef);
 //SV *GetRequest(SV *connPerlRef)
 //{

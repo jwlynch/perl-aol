@@ -11,6 +11,8 @@ Ns_DbHandle *NsDbHandleInputMap(SV *arg);
 int NsDbHandleIsNull(SV *arg);
 void MakeNsDbHandleNull(SV *arg);
 SV *NsDbHandleOutputMap(Ns_DbHandle *var, char *class);
+SV *GetSelectRow(SV *dbHandlePerlRef);
+void StoreSelectRow(SV *dbHandlePerlRef, Ns_Set *selectRowSet);
 
 //SV *GetHeaders(SV *connPerlRef);
 //SV *GetOutputHeaders(SV *connPerlRef);
