@@ -1,5 +1,5 @@
 #
-# $Header: /home/jim/perl-aol-cvs-repo-backups/perl-aol/nsperl/Makefile,v 1.6 2000/12/02 04:19:46 jwl Exp $
+# $Header: /home/jim/perl-aol-cvs-repo-backups/perl-aol/nsperl/Makefile,v 1.7 2000/12/02 04:29:12 jwl Exp $
 #
 # nsexample --
 #
@@ -59,7 +59,7 @@ HDRS     =
 #
 # Extra libraries
 #
-MODLIBS  =  $(shell $(PERLCONFIG) --archdir)/auto/DynaLoader/DynaLoader.a $(shell $(PERLCONFIG) --archdir)/CORE/libperl.so /usr/lib/libcrypt.a
+MODLIBS  =  $(shell $(PERLCONFIG) --archdir)/auto/DynaLoader/DynaLoader.a $(shell $(PERLCONFIG) --archdir)/CORE/$(LIBPERL) /usr/lib/libcrypt.a
 
 #
 # Compiler flags
