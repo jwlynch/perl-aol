@@ -147,7 +147,7 @@ void NsDbHandleStoreSelectRow(SV *dbHandlePerlRef, Ns_Set *selectRowSet)
 
 int NsDbHandleIsInSelectLoop(SV *dbHandlePerlRef)
 {
-  return NsSetInputMap(NsDbHandleGetSelectRow(dbHandlePerlRef)) != 0
+  return ! NsSetIsNull(NsDbHandleGetSelectRow(dbHandlePerlRef));
 }
 
 
