@@ -1,7 +1,10 @@
 use Config;
 use ExtUtils::Embed;
 
-
+if ($ARGV[0] eq  "--archdir")
+{
+    print "$Config{archlib}\n";
+}
 if ($ARGV[0] eq  "--includes")
 {
     print "$Config{archlib}/CORE\n";
@@ -12,5 +15,5 @@ elsif ($ARGV[0] eq  "--libs")
 }
 elsif ($ARGV[0] eq  "--cflags")
 {
-    print ccopts;
+    print ccopts . "\n";
 }
