@@ -2,9 +2,8 @@ Ns_Set *	T_Ns_Set
 
 INPUT
 T_Ns_Set
-	$var = NsSetInputMap($arg, \"Aolserver::Ns_Set\", \"$var\");
-	    
+	$var = NsSetInputMap($arg, \"Aolserver::Ns_Set\", \"$var\")
 
 OUTPUT
 T_Ns_Set
-	$arg = NsSetOutputMap($var, \"Aolserver::Ns_Set\");
+	$arg = NsSetOutputMap($var, \"Aolserver::Ns_Set\")

@@ -212,6 +212,6 @@ DESTROY(self)
 	SV *	self
     CODE:
 	if(! NsSetIsNull(self))
-    	  Ns_SetFree(NsSetInputMap(self));
+    	  Ns_SetFree(NsSetInputMap(self, "Aolserver::Ns_Set", "self"));
 
 
