@@ -178,6 +178,21 @@ An example piece of a config file (yourserver.ini) reads:
    [ns/server/yourserver/module/nsperl]      <--- add this
    binary=/usr/local/aolserver/bin/nsperl.so <--- and this
 
+For newer releases of AOLserver using .tcl config files:
+
+   #
+   # Modules to load
+   #
+   ns_section "ns/server/${servername}/modules"
+   ns_param   nssock          ${bindir}/nssock${ext}
+   ns_param   nslog           ${bindir}/nslog${ext}
+   ns_param   nsperl          ${bindir}/nsperl${ext}  <--- add this
+
+   ...
+
+   ns_section "ns/server/${servername}/module/nsperl" <--- add this
+   set binary ${bindir}nsperl${ext}                   <--- add this
+
 and a quick check of the Makefile.module should confirm the place
 the modules are installed is in /usr/local/aolserver/bin/.
 
