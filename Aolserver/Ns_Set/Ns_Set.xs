@@ -211,6 +211,7 @@ void
 DESTROY(self)
 	Ns_Set *	self
     CODE:
-    	Ns_SetFree(self);
+	if(! NsSetIsNull(self))
+    	  Ns_SetFree(self);
 
 

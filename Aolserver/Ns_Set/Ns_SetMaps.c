@@ -23,6 +23,18 @@ Ns_Set *NsSetInputMap(SV *arg)
   return result;
 }
 
+int NsSetIsNull(SV *arg)
+{
+  return NsSetInputMap(arg) == NULL;
+}
+
+void MakeNsSetNull(SV *arg)
+{
+  dTHX;
+  
+  sv_setiv(SvRV(arg), 0);
+}
+
 SV *NsSetOutputMap(Ns_Set *var, char *class)
 {
   dTHX;
