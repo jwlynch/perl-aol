@@ -50,6 +50,6 @@ SV *NsSetOutputMap(Ns_Set *var, char *class)
 
 void NsSetStore(SV *setPerlRef, Ns_Set *set)
 {
-  sv_setiv(SvRV(setPerlRef), set)
+  sv_setiv(SvRV(setPerlRef), (IV) set);
 }
 
