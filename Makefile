@@ -37,10 +37,14 @@ nspclean:
 
 clean: pmclean nspclean
 
-install: all
+install: nspinstall pminstall
+
+nspinstall: stamp-nsperl
+	cd nsperl; $(MAKE) install
+
+pminstall: stamp-perlmodules
 	for i in $(PERLMODULES); \
 	do \
 	    (cd Aolserver/$$i; \
 	     $(MAKE) install) ; \
 	done
-	cd nsperl; $(MAKE) install
