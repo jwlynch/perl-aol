@@ -1,0 +1,59 @@
+This buffer is for notes you don't want to save, and for Lisp evaluation.
+If you want to create a file, visit that file with C-x C-f,
+then enter the text in that file's own buffer.
+
+<jim> bod:
+<jim> can a typemap use a function from outside perl, such as one inside its
+      module?
+<jim> like, if I have a module A defined by A/A.xs and A/maps.c has some
+      functions, can I use them in A/typemap?
+<bod> of course
+<jim> ok...
+<jim> there is a section that goes   if (sv_derived_from( ... )) {  IV tmp =
+      SvIV((SV*)SvRV($arg));  $var = ($type) tmp;  } else croak( ... );
+<bod> which is C
+<bod> with some replacents
+<jim> and I want to replace that by   if (sv_derived_from( ... )) {  IV tmp =
+      InputMap($arg);  $var = ($type) tmp;  } else croak( ... );
+<jim> and putting InputMap into Ns_Conn/maps.c
+<jim> or maybe Ns_Conn_InputMap($arg); (to avoid namespace probs)
+<bod> jim: take a look at the .c file created from your .xs
+<bod> see what happens for input conversions
+<jim> oh, I remember seeing that...
+<jim> it just macros em in
+<bod> yes
+<jim> or so it seems
+<bod> $arg is generally ST(n)
+<bod> $var is the declared C argument
+<bod> $type is the type of same
+<jim> bod: ok... so just for my edification lemme try and see how this would
+      work...
+<jim> because the typemap is textually copied into the .c file, anything I use
+      in that .c file I can use in the typemap... true?
+<bod> anything linked to the resulting .so actually
+<bod> including what's in the generated .c (from .xs)
+<bod> and any libraries or object files you additionally link
+<jim> and does that also include any .o file I link to?
+<jim> erm.... so yes
+* bod assumes some lag
+<jim> fingers :)
+<jim> I need to warm em up for playing bass tonite
+<jim> hmmm, that seems to open lots of structural doors
+<jim> given all these op3en doors, how would you structure the following
+      situation:
+<jim> I have a struct A which contains a pointer to a struct B
+<jim> I have an A.xs and a B.xs
+<jim> I need a way in A.xs that I can use inside an xsub therein that creates
+      the designed perl infrastructure for B
+<jim> then I would stuff that infrastructure into an AV (or maybe HV, dunno
+      yet)
+<jim> this sound reasonable?
+<bod> I have no idea what you are talking about WRT zeroing IVs
+<bod> but as far as multiple XS modules go
+<bod> it is possible if A uses B for instance, but B doesn't use A
+<jim> and yes, it's true that A contains a pointer to a B, but the B does not
+      contain a pointer to the A
+<jim> or even any other A
+<bod> then in the .pm for A, you need to "use B" before you bootstrap A
+<bod> note, I'm *guessing* a fair bit here...  I've not done this
+<bod> you will need to try it and see
