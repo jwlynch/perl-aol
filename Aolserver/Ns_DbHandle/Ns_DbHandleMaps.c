@@ -59,12 +59,13 @@ SV *NsDbHandleOutputMap(Ns_DbHandle *var, char *class)
       0
     );
 
+  // create perl infrastructure for selectRowSet, make the ptr be initially 0
   hv_store
     (
       hashReferent, 
       "selectRowSet", 
       12, 
-      NULL /* initially null: means NO select is current & NO rows pending */,
+      NsSetOutputMap(NULL, "Aolserver::Ns_Set"),
       0
     );
 
@@ -108,57 +109,45 @@ SV *NsDbHandleGetSelectRow(SV *dbHandlePerlRef)
   return *hashValue;
 }
 
-// Keep track of whether we are in a select loop. 
-//
-//   two possibilities:
-//     - we ARE. selectRowSet is NOT zero, and actually points to a
-//         statically allocated Ns_Set presumed to come from Select.
-//     - we are NOT. selectRowSet is zero.
-//
-//   If we are in a select loop, then provide perl infrastructure (thru
-//   NsSetOutputMap()) and store a properly reference counted structure.
-//
-//       Select() would provide an Ns_Set if no errors were encountered,
-//       and this would put us in a select loop.
-//
-//   If we are not, store a NULL where the pointer to the perl infrastructure
-//   otherwise would have been. If a row was here, make sure to break the
-//   link to it from the perl infrastructure.
-//
-//       Having gotten the last row and calling GetRow "one more time"
-//       should make this null. So should the DESTROY method as well as
-//       Cancel and Flush. ALSO, calling ExecDML, GetOneRow or GetOneRowAtMost
-//       on a handle which is in a select loop is an error, and causes a Flush
-//       which should also make this null.
+// Store an existing Ns_Set (or a NULL pointer) into the perl infrastructure
+// of the selectRow Ns_Set.
 
 void NsDbHandleStoreSelectRow(SV *dbHandlePerlRef, Ns_Set *selectRowSet)
 {
   dTHX;
-  SV *selectRowSetPerlRef = NULL;
+  SV *selectRowSetPerlRef = NsDbHandleGetSelectRow(dbHandlePerlRef);
 
-  // If incoming set ptr is not null, call Aolserver::Ns_Set's output
-  // typemap to create a blessed ref to the set.........
+  NsSetStore(selectRowSetPerlRef, selectRowSet);
+}
 
-  if(selectRowSet)
-    {
-      selectRowSetPerlRef = NsSetOutputMap(selectRowSet, "Aolserver::Ns_Set");
-    }
-  else
-    {
-      // break any link to existing row
-      
-    }
+// Return true if we are in a select loop.
+//
+//   selectRowSet always points at a blessed perl Ns_Set infrastructure.
+//   Within this infrastructure, is a pointer presumed to be to an Ns_Set.
+//   This pointer either points at a set (and is non-zero) or at nothing
+//   (and is zero).
+//
+//   two possibilities:
+//     - we ARE. The pointer is NOT zero, and actually points to a
+//         statically allocated Ns_Set presumed to come from Select.
+//     - we are NOT. The pointer is zero.
+//
+//   Going into a select loop...
+//
+//       Select() would provide an Ns_Set if no errors were encountered,
+//       and this would put us in a select loop.
+//
+//   Coming out of a select loop...
+//
+//       Having gotten the last row and calling GetRow "one more time"
+//       should take us out. So should the DESTROY method as well as
+//       Cancel and Flush. ALSO, calling ExecDML, GetOneRow or GetOneRowAtMost
+//       on a handle which is in a select loop is an error, and causes a Flush
+//       which should also take us out of the (existing!) select loop.
 
-  // ....Otherwise, don't bother. The stored value will be NULL and not a set.
-
-  hv_store
-    (
-      (HV*)SvRV(dbHandlePerlRef), 
-      "selectRowSet", 
-      12, 
-      selectRowSetPerlRef,
-      0
-    );
+int NsDbHandleIsInSelectLoop(SV *dbHandlePerlRef)
+{
+  return NsSetInputMap(NsDbHandleGetSelectRow(dbHandlePerlRef)) != 0
 }
 
 
