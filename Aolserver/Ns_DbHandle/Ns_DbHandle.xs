@@ -132,7 +132,7 @@ Select(handlePerlRef, sql)
     PREINIT:
 	Ns_DbHandle *handle;
     CODE:
-	RETVAL = PL_sv_undef;
+	RETVAL = &PL_sv_undef;
 
 	if
 	  (
