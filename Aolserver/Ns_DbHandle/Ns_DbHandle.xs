@@ -251,11 +251,11 @@ DESTROY(handlePerlRef)
     PREINIT:
 	Ns_DbHandle *handle = NsDbHandleInputMap(handlePerlRef);
     CODE:
-	if(NsDbHandleIsInSelectLoop(handlePerlRef))
-	{
-	  NsDbHandleStoreSelectRow(handlePerlRef, (Ns_Set *) NULL);
-	  Ns_DbCancel(handle);
-	}
-
-	Ns_DbPoolPutHandle(handle);
-        fprintf(stderr, "Ns_DbHandle returned and freed\n");
+	//if(NsDbHandleIsInSelectLoop(handlePerlRef))
+	//{
+	//  NsDbHandleStoreSelectRow(handlePerlRef, (Ns_Set *) NULL);
+	//  Ns_DbCancel(handle);
+	//}
+	//
+	//Ns_DbPoolPutHandle(handle);
+        //fprintf(stderr, "Ns_DbHandle returned and freed\n");
