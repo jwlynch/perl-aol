@@ -130,5 +130,4 @@ void
 DESTROY(self)
 	Ns_DbHandle *	self
     CODE:
-	if(! NsDbHandleIsNull(self))
-	  Ns_DbPoolPutHandle(self);
+	Ns_DbPoolPutHandle(self);
