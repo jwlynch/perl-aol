@@ -34,7 +34,6 @@ new(class)
 	char *		class
 
     CODE:	
-	return 0;
 	RETVAL = malloc(sizeof(Ns_Conn));
 	if (RETVAL)
 	{
@@ -96,7 +95,12 @@ SV *
 OutputHeaders(connPerlRef)
 	SV *	connPerlRef
     CODE:
+	fprintf(stderr, "OutputHeaders:\n");
+	fprintf(stderr, "Before: ");
+	NsConnPrintRefCounts(connPerlRef);
 	RETVAL = sv_mortalcopy( NsConnGetOutputHeaders(connPerlRef) );
+	fprintf(stderr, "After:  ");
+	NsConnPrintRefCounts(connPerlRef);
     OUTPUT:
 	RETVAL
 
@@ -513,10 +517,17 @@ Headers(connPerlRef)
 #	RETVAL
 
 char *
-Host(conn)
-	Ns_Conn *	conn
+Host(connPerlRef)
+	SV *	connPerlRef
+    PREINIT:
+	Ns_Conn *conn = NsConnInputMap(connPerlRef, "Aolserver::Ns_Conn", "conn");
     CODE:
+	fprintf(stderr, "Host:\n");
+	fprintf(stderr, "Before: ");
+	NsConnPrintRefCounts(connPerlRef);
 	RETVAL = Ns_ConnHost(conn);
+	fprintf(stderr, "After:  ");
+	NsConnPrintRefCounts(connPerlRef);
     OUTPUT:
 	RETVAL
 
@@ -529,10 +540,17 @@ Init(connPtr)
 	RETVAL
 
 char *
-Location(conn)
-	Ns_Conn *	conn
+Location(connPerlRef)
+	SV *	connPerlRef
+    PREINIT:
+	Ns_Conn *conn = NsConnInputMap(connPerlRef, "Aolserver::Ns_Conn", "conn");
     CODE:
+	fprintf(stderr, "Location:\n");
+	fprintf(stderr, "Before: ");
+	NsConnPrintRefCounts(connPerlRef);
 	RETVAL = Ns_ConnLocation(conn);
+	fprintf(stderr, "After:  ");
+	NsConnPrintRefCounts(connPerlRef);
     OUTPUT:
 	RETVAL
 

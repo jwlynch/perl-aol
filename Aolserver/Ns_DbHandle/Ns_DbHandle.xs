@@ -30,6 +30,7 @@ new(class, pool)
 	if (RETVAL)
 	{
 	    ST(0) = sv_2mortal( NsDbHandleOutputMap(RETVAL, class) );
+            fprintf(stderr, "Ns_DbHandlem allocated\n");
 	}
 	else
 	{
@@ -257,4 +258,4 @@ DESTROY(handlePerlRef)
 	}
 
 	Ns_DbPoolPutHandle(handle);
-
+        fprintf(stderr, "Ns_DbHandle returned and freed\n");

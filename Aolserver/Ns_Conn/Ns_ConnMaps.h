@@ -7,7 +7,7 @@
 
 #include "ns.h"
 
-Ns_Conn *NsConnInputMap(SV *arg);
+Ns_Conn *NsConnInputMap(SV *arg, char *class, char *varName);
 SV *NsConnOutputMap(Ns_Conn *var, char *class);
 
 void NsConnPrintRefCounts(SV *connPerlRef);

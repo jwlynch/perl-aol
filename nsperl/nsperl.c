@@ -34,7 +34,7 @@
  *
  */
 
-static const char *RCSID = "@(#) $Header: /home/jim/perl-aol-cvs-repo-backups/perl-aol/nsperl/nsperl.c,v 1.8 2000/12/12 10:01:30 jwl Exp $, compiled: " __DATE__ " " __TIME__;
+static const char *RCSID = "@(#) $Header: /home/jim/perl-aol-cvs-repo-backups/perl-aol/nsperl/nsperl.c,v 1.9 2000/12/26 07:18:43 jwl Exp $, compiled: " __DATE__ " " __TIME__;
 
 #include "ns.h"
 
@@ -272,11 +272,20 @@ int do_perl(void *context, Ns_Conn *conn)
 	    GvMULTI_on(theConnGlob);
 	  }
 #else
-	  sv_setsv
-	    (
-	      get_sv("Aolserver::Ns_Conn::theConn", TRUE /* | GV_ADDMULTI */),
-	      NsConnOutputMap(conn, "Aolserver::Ns_Conn")
-	    );
+	  {
+	    SV *conPerlRef = NsConnOutputMap(conn, "Aolserver::Ns_Conn");
+
+	    SvREFCNT_inc(conPerlRef);
+	    SvREFCNT_inc(conPerlRef);
+	    SvREFCNT_inc(conPerlRef);
+	    SvREFCNT_inc(conPerlRef);
+	    SvREFCNT_inc(conPerlRef);
+	    sv_setsv
+	      (
+	        get_sv("Aolserver::Ns_Conn::theConn", TRUE | GV_ADDMULTI),
+	        conPerlRef
+	      );
+	  }
 #endif
 
 	  perl_run(aTHX);

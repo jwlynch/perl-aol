@@ -15,6 +15,8 @@
 #include "../Ns_Set/Ns_SetMaps.h"
 #include "../Ns_Request/Ns_RequestMaps.h"
 
+#include "Ns_ConnMaps.h"
+
 #include <nsthread.h>
 #include <tcl.h>
 #include <ns.h>
@@ -24,7 +26,7 @@
 void NsConnPrintRefCounts(SV *connPerlRef)
 {
   HV *hashReferent = (HV*)SvRV(connPerlRef);
-  SV **hv = hv_fetch( (HV*)SvRV(arg), "theNs_Conn", 10, FALSE);
+  SV **hv = hv_fetch( hashReferent, "theNs_Conn", 10, FALSE);
   SV *theConnIV  = hv ? *hv : 0;
   SV *headers    = NsConnGetHeaders(connPerlRef);
   SV *outHeaders = NsConnGetOutputHeaders(connPerlRef);
@@ -33,25 +35,39 @@ void NsConnPrintRefCounts(SV *connPerlRef)
   fprintf
     (
       stderr, 
-      "refcounts: ref: %d, hash: %d, conn: %d, hdrs: %d, oHdrs: %d, req: %d\n",
+      "refcounts: ref: %ld, hash: %ld, conn: %ld, hdrs: %ld, oHdrs: %ld, req: %ld\n",
       SvREFCNT(connPerlRef),
-      SvREFCNT(hashReferent)
-      theConnIV ? SvREFCNT(theConnIV) : -99,
+      SvREFCNT(hashReferent),
+      theConnIV ? SvREFCNT(theConnIV) : -99L,
       SvREFCNT(headers),
       SvREFCNT(outHeaders),
-      SvREFCNT(request),
+      SvREFCNT(request)
     );
 }
 
-Ns_Conn *NsConnInputMap(SV *arg)
+Ns_Conn *NsConnInputMap(SV *arg, char *class, char *varName)
 {
   dTHX;
   Ns_Conn *result = 0;
-  SV **hashValue = hv_fetch( (HV*)SvRV(arg), "theNs_Conn", 10, FALSE);
 
-  if(hashValue)
-    result = (Ns_Conn *) SvIV( *hashValue );
- 
+  if (sv_derived_from(arg, class)) 
+    {
+      SV **hashValue = hv_fetch( (HV*)SvRV(arg), "theNs_Conn", 10, FALSE);
+      
+      fprintf(stderr, "NsConnInputMap: ");
+      NsConnPrintRefCounts(arg);
+      
+      if(hashValue)
+	result = (Ns_Conn *) SvIV( *hashValue );
+    }
+  else
+    {
+      char msg[200];
+
+      snprintf(msg, 199, "%s is not of type %s", varName, class);
+      croak(msg);
+    }
+
   return result;
 }
 
@@ -98,6 +114,9 @@ SV *NsConnOutputMap(Ns_Conn *var, char *class)
     );
 
   sv_bless(arg, gv_stashpv(class, TRUE));
+
+  fprintf(stderr, "NsConnOutputMap: ");
+  NsConnPrintRefCounts(arg);
 
   return arg;
 }
