@@ -1,5 +1,5 @@
 #
-# $Header: /home/jim/perl-aol-cvs-repo-backups/perl-aol/nsperl/Makefile,v 1.1 2000/11/09 17:13:48 jim Exp $
+# $Header: /home/jim/perl-aol-cvs-repo-backups/perl-aol/nsperl/Makefile,v 1.2 2000/11/09 17:19:32 jim Exp $
 #
 # nsexample --
 #
@@ -9,7 +9,7 @@
 #
 # perl-aol project dir location
 #
-PERL_AOL = ../..
+PERL_AOL = ..
 
 #
 # AOLserver's location
@@ -19,7 +19,8 @@ PERL_AOL = ../..
 #
 #NSHOME   =  /home/user/cvs/aolserver
 #NSHOME   =  ../aolserver
-NSHOME   =  $(PERL_AOL)/aolsvr-src/aolserver3_1
+#NSHOME   =  $(PERL_AOL)/aolsvr-src/aolserver3_1
+NSHOME   =  /usr/local/aolserver
 
 #
 # libs and include locations and other parameters for perl
@@ -30,7 +31,7 @@ NSHOME   =  $(PERL_AOL)/aolsvr-src/aolserver3_1
 #  you wish to build with must be found first in the path.
 #
 
-PERLCONFIG = ../perl-config
+PERLCONFIG = perl-config
 
 PLIBS   = $(LIBS) -L$(shell perl $(PERLCONFIG) --libs) -lperl -lcrypt
 PINCLUDES = -I$(shell perl $(PERLCONFIG) --includes)
@@ -78,8 +79,3 @@ Ns_SetMaps.o: $(PERL_AOL)/Aolserver/Ns_Set/Ns_SetMaps.c
 
 Ns_RequestMaps.o: $(PERL_AOL)/Aolserver/Ns_Request/Ns_RequestMaps.c
 	gcc $(CFLAGS) -c -o Ns_RequestMaps.o $(PERL_AOL)/Aolserver/Ns_Request/Ns_RequestMaps.c
-
-Ns_DbMaps.o: $(PERL_AOL)/Aolserver/Ns_Db/Ns_DbMaps.c
-	gcc $(CFLAGS) -c -o Ns_DbMaps.o $(PERL_AOL)/Aolserver/Ns_Db/Ns_DbMaps.c
-
-
