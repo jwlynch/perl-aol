@@ -109,7 +109,7 @@ SV *NsDbHandleGetSelectRow(SV *dbHandlePerlRef)
        hv_fetch
          ( 
             (HV*)SvRV(dbHandlePerlRef), 
-            "selectRowSet", 7, 
+            "selectRowSet", 12, 
             FALSE
          );
   
