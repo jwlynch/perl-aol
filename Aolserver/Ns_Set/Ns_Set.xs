@@ -214,6 +214,7 @@ DESTROY(self)
 	{
 	  Ns_Set *tmp = NsSetInputMap(self, "Aolserver::Ns_Set", "self");
     	  Ns_SetFree(tmp);
+	  NsSetMakeNull(self);
 	  fprintf(stderr, "NOT null. freeing set at %p.\n", tmp);
 	}
 	else
