@@ -137,7 +137,9 @@ SV *
 GetSelectRow(handlePerlRef)
 	SV *	handlePerlRef
     CODE:
+	/**/fprintf(stderr, "refcnt b4 is %d\n", SvREFCNT(handlePerlRef));
 	RETVAL = NsDbHandleGetSelectRow(handlePerlRef);
+	/**/fprintf(stderr, "refcnt is %d\n", SvREFCNT(handlePerlRef));
     OUTPUT:
 	RETVAL
 

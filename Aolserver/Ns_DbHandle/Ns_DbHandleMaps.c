@@ -55,7 +55,6 @@ SV *NsDbHandleOutputMap(Ns_DbHandle *var, char *class)
   dTHX;
   HV *hashReferent = newHV();
   SV *arg = newRV_inc( (SV *) hashReferent);
-  /**/SV *tmp;
 
   hv_store
     (
@@ -68,15 +67,13 @@ SV *NsDbHandleOutputMap(Ns_DbHandle *var, char *class)
 
   // create perl infrastructure for selectRowSet, 
   // make the ptr be initially a (Ns_Set*) NULL
-  /**/tmp = NsSetOutputMap( (Ns_Set*) NULL, "Aolserver::Ns_Set");
-  /**/fprintf(stderr, "refcnt of the select row is %d\n", SvREFCNT(tmp));
+
   hv_store
     (
       hashReferent, 
       "selectRowSet", 
       12, 
-      /**/ //NsSetOutputMap( (Ns_Set*) NULL, "Aolserver::Ns_Set"),
-      /**/tmp,
+      NsSetOutputMap( (Ns_Set*) NULL, "Aolserver::Ns_Set"),
       0
     );
 
@@ -116,8 +113,10 @@ SV *NsDbHandleGetSelectRow(SV *dbHandlePerlRef)
             "selectRowSet", 12, 
             FALSE
          );
-  
-  return *hashValue;
+  SV *selectRowRef = *hashValue;
+  SV *refCopy = sv_mortalcopy(selectRowRef);
+
+  return refCopy;
 }
 
 // Store an existing Ns_Set (or a NULL pointer) into the perl infrastructure
