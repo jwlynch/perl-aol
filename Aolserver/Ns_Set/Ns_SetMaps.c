@@ -20,7 +20,7 @@ Ns_Set *NsSetInputMap(SV *arg, char *class, char *varName)
   dTHX;
   Ns_Set *result = 0;
 
-  if (sv_derived_from($arg, class))
+  if (sv_derived_from(arg, class))
     result = (Ns_Set *) SvIV( SvRV(arg) );
   else
     {
@@ -35,7 +35,7 @@ Ns_Set *NsSetInputMap(SV *arg, char *class, char *varName)
 
 int NsSetIsNull(SV *arg)
 {
-  return NsSetInputMap(arg) == NULL;
+  return NsSetInputMap(arg, "Aolserver::Ns_Set", "arg") == NULL;
 }
 
 void NsSetMakeNull(SV *arg)
