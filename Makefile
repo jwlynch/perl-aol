@@ -12,7 +12,7 @@ stamp-perlmodules:
 	for i in $(PERLMODULES); \
 	do \
 	    (cd Aolserver/$$i; \
-	     $(PERL) Makefile.PL; \
+	     $(MAKE) -f Makefile.outer Makefile; \
 	     $(MAKE) ) ; \
 	done
 	touch stamp-perlmodules
