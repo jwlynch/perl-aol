@@ -25,7 +25,7 @@ new(class)
             LOG(StringF("  - initialized by Ns_DStringInit"));
 
 	    ST(0) = sv_newmortal();
-            sv_setsv(ST(0), NsDStringOutputMap(RETVAL, class));
+            sv_setsv(ST(0), NsDStringOutputMap(RETVAL, class, perlDoesOwn));
 	}
 	else
 	{
@@ -82,12 +82,25 @@ Length(self)
 	RETVAL
 
 void
-DESTROY(self)
-	Ns_DString *	self
-
+DESTROY(dStringPerlRef)
+	SV *	dStringPerlRef
+    PREINIT:
+        Ns_DString *the_DString = NsDStringInputMap
+                                    (
+                                      dStringPerlRef,
+                                      "Aolserver::Ns_DString",
+                                      "dStringPerlRef"
+                                    );
     CODE:
-        LOG(StringF("Ns_DString at %p to be freed", self));
-    	Ns_DStringFree(self);
-	free(self);
-        LOG(StringF("Ns_DString at %p freed", self));
+        LOG(StringF("Ns_DString::DESTROY:"));
 
+	if(NsDStringOwnedP(dStringPerlRef))
+          {
+            LOG(StringF("  - perl DOES own, so free(%p)", the_DString));
+    	    Ns_DStringFree(the_DString);
+	    free(the_DString);
+          }
+        else
+          {
+            LOG(StringF("  - perl does not own Ns_DString at %p; NOT freed", the_DString));
+          }

@@ -153,20 +153,17 @@ SV *NsDbHandleGetSelectRow(SV *dbHandlePerlRef)
 void NsDbHandleStoreSelectRow(SV *dbHandlePerlRef, Ns_Set *selectRowSet)
 {
   dTHX;
-  SV *selectRowSetPerlRef = NsDbHandleGetSelectRow(dbHandlePerlRef);
 
   LOG(StringF("NsDbHandleStoreSelectRow:"));
   LOG(StringF("  - before doing sv_setsv"));
 
-  sv_setsv
+  hv_store
     (
-      selectRowSetPerlRef, 
-      NsSetOutputMap
-        (
-	  selectRowSet,
-	  "Aolserver::Ns_Set",
-	  perlDoesntOwn
-        )
+      (HV*)SvRV(dbHandlePerlRef), 
+      "selectRowSet", 
+      12, 
+      NsSetOutputMap(selectRowSet, "Aolserver::Ns_Set", perlDoesntOwn),
+      0
     );
 
   LOG(StringF("  - after doing sv_setsv"));

@@ -3,7 +3,12 @@ Ns_DString *	T_Ns_DString
 INPUT
 T_Ns_DString
 	if (sv_derived_from($arg, \"Aolserver::Ns_DString\")) {
-	    $var = NsDStringInputMap($arg);
+	    $var = NsDStringInputMap
+                     (
+                       $arg, 
+                       \"Aolserver::Ns_DString\",
+                       \"$arg\"
+                     );
 	}
 	else
 	    croak(\"$var is not of type Aolserver::Ns_DString\")
@@ -12,6 +17,6 @@ T_Ns_DString
 
 OUTPUT
 T_Ns_DString
-	sv_setsv( $arg, Ns_DStringOutputMap($var, "Aolserver::Ns_DString") );
+        $arg = Ns_DStringOutputMap($var, "Aolserver::Ns_DString", perlDoesOwn);
 
 

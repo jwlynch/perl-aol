@@ -1,8 +1,9 @@
 
 // This is an Aolserver::Ns_Request:
 //
-// reference -> SvIV -> ram slab which is Ns_Request
-//     |
+//     SvRV  -> hash -> {theNs_Request} -> SvIV -> ram slab which is Ns_Request
+//      |               {perlOwns}      -> true if perl owns the Ns_Request
+//      |
 //   blessed as
 // "Aolserver::Ns_Request"
 

@@ -307,10 +307,21 @@ DESTROY(handlePerlRef)
                                   "handlePerlRef"
                                 );
     CODE:
-	if(NsDbHandleIsInSelectLoop(handlePerlRef))
-	{
-	  Ns_DbCancel(handle);
-	}
+        LOG(StringF("Ns_DbHandle::DESTROY:"));
+
+	if(NsDbHandleOwnedP(handlePerlRef))
+          {
+            LOG(StringF("  - perl DOES own. Free handle."));
+
+	    if(NsDbHandleIsInSelectLoop(handlePerlRef))
+	    {
+              LOG(StringF("    + handle was inside select loop. cancel it."));
+	      Ns_DbCancel(handle);
+	    }
 	
-	Ns_DbPoolPutHandle(handle);
-        LOG(StringF("Ns_DbHandle returned and freed"));
+	    Ns_DbPoolPutHandle(handle);
+          }
+        else
+          {
+            LOG(StringF("  - perl does NOT own. -don't- free handle."));
+          }

@@ -5,6 +5,8 @@
 //      |               {headers}       -> (set ref as def'd by its typemap)
 //      |               {outputheaders} -> (set ref as def'd by its typemap)
 //      |               {request}       -> (request ref as def'd by typemap)
+//      |               {perlOwns}      -> true if perl owns the Ns_Conn
+//      |                                    (-never-, afaict!)
 //   blessed as
 // "Aolserver::Ns_Conn"
 
