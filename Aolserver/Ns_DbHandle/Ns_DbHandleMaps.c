@@ -2,9 +2,15 @@
 // This is now an Aolserver::Ns_DbHandle:
 // 
 // reference -> hash -> {theNs_DbHandle} -> SvIV -> Ns_Conn
-//      |               {selectRowSet}   -> (statically alloc'd set !or! NULL)
+//      |               {selectRowSet}   -> perl infrastructure for set
+//      |                                    (
+//      |                                      def'd by NsSetMaps.[ch]
+//      |                                      currently SvRV -> SvIV -> set
+//      |                                      !or!      SvRV -> SvIV -> NULL
+//      |                                    )
 //      |               {}               -> ()
-// blessed as           {}               -> ()
+//      |               {}               -> ()
+//   blessed as:
 // "Aolserver::Ns_DbHandle"
 
 #include "EXTERN.h"
@@ -60,13 +66,13 @@ SV *NsDbHandleOutputMap(Ns_DbHandle *var, char *class)
     );
 
   // create perl infrastructure for selectRowSet, 
-  // make the ptr be initially perl's "undef" val
+  // make the ptr be initially a (Ns_Set*) NULL
   hv_store
     (
       hashReferent, 
       "selectRowSet", 
       12, 
-      NsSetOutputMap(&PL_sv_undef, "Aolserver::Ns_Set"),
+      NsSetOutputMap( (Ns_Set*) NULL, "Aolserver::Ns_Set"),
       0
     );
 
@@ -151,6 +157,7 @@ int NsDbHandleIsInSelectLoop(SV *dbHandlePerlRef)
   return ! NsSetIsNull(NsDbHandleGetSelectRow(dbHandlePerlRef));
 }
 
+// these are copied from a different module; they are here acting as templates
 
 //// outputs the stored ref to the Ns_Set, takes the ref to the conn as input
 //
