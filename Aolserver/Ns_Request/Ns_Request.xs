@@ -22,12 +22,37 @@ MODULE = Aolserver::Ns_Request		PACKAGE = Aolserver::Ns_Request
 
 # NOTE: Class method that builds a new Request out of a http request line
 
-Ns_Request *
-newParseLine(requestLine)
+SV *
+newParseLine(class, requestLine)
+	char *		class
         char *          requestLine
+    PREINIT:
+	Ns_Request *theRequest;
     CODE:
-        RETVAL = Ns_ParseRequest(requestLine);
-    OUTPUT:
+        LOG(StringF("Aolserver::Ns_Request new:"));
+	theRequest = Ns_ParseRequest(requestLine);
+	if (theRequest)
+	{
+	    RETVAL = sv_2mortal
+                       ( 
+	                 NsRequestOutputMap(theRequest, class, perlDoesOwn) 
+                       );
+	    LOG
+	      (
+	        StringF
+                  (
+                    "  - new Ns_Request %p wrapped in output mapping at %p",
+                    theRequest,
+                    RETVAL
+                  )
+              );
+	}
+	else
+	{
+	    LOG(StringF("  - new Ns_Request could not be created by nsd"));
+	    RETVAL = &PL_sv_undef;
+	}
+    OUTPUT:	
 	RETVAL
 
 void
@@ -50,16 +75,21 @@ void
 DESTROY(reqPerlRef)
 	SV *	reqPerlRef
     PREINIT:
-	Ns_Request *req = NsRequestInputMap(reqPerlRef);
+	Ns_Request *req = NsRequestInputMap
+                            (
+                              reqPerlRef, 
+                              "Aolserver::Ns_Request",
+                              "reqPerlRef"
+                            );
     CODE:
-	LOG(StringF("Ns_Request:\n"));
-	if(! NsRequestIsNull(reqPerlRef))
+	LOG(StringF("Ns_Request:"));
+	if(NsRequestOwnedP(reqPerlRef))
 	{
 	  LOG
             (
               StringF
                 (
-                  "  - freed request at perl ref %p (internal %p)\n", 
+                  "  - freed request at perl ref %p (internal %p)", 
                   reqPerlRef, 
                   req
                 )
@@ -72,7 +102,7 @@ DESTROY(reqPerlRef)
             (
               StringF
                 (
-                  "  - request from perl ref %p not freed because null\n",
+                  "  - request from perl ref %p not freed because null",
                   reqPerlRef
                 )
             );

@@ -3,11 +3,21 @@ Ns_Request *	T_Ns_Request
 INPUT
 T_Ns_Request
 	if (sv_derived_from($arg, \"Aolserver::Ns_Request\")) {
- 	    $var = NsRequestInputMap($arg);
+ 	    $var = NsRequestInputMap
+                     (
+                       $arg, 
+                       \"Aolserver::Ns_Request\", 
+                       \"$arg\"
+                     );
 	}
 	else
 	    croak(\"$var is not of type Aolserver::Ns_Request\")
 
 OUTPUT
 T_Ns_Request
-	$arg = NsRequestOutputMap($var, \"Aolserver::Ns_Request\");
+	$arg = NsRequestOutputMap
+                 (
+                   $var, 
+                   \"Aolserver::Ns_Request\", 
+                   perlDoesOwn
+                 );

@@ -19,6 +19,8 @@
 
 #include "Ns_ConnMaps.h"
 
+#include "AolserverCommon.h"
+
 #include <nsthread.h>
 #include <tcl.h>
 #include <ns.h>
@@ -75,18 +77,18 @@ Ns_Conn *NsConnInputMap(SV *arg, char *class, char *varName)
   return result;
 }
 
-SV *NsConnOutputMap(Ns_Conn *var, char *class)
+SV *NsConnOutputMap(Ns_Conn *var, char *class, int perlOwns)
 {
   dTHX;
   HV *hashReferent = newHV();
   SV *arg = newRV_noinc( (SV *) hashReferent);
 
-  LOG(StringF("NsConnOutputMap: (creating new perl stuff for the C stuff)\n"));
+  LOG(StringF("NsConnOutputMap: (creating new perl stuff for the C stuff)"));
   LOG
     (
       StringF
         (
-          "  - overall ref at %p and its refcnt is %ld\n", 
+          "  - overall ref at %p and its refcnt is %ld", 
 	  arg, 
 	  SvREFCNT(arg)
 	)
@@ -95,7 +97,7 @@ SV *NsConnOutputMap(Ns_Conn *var, char *class)
     (
       StringF
         (
-          "  - hash at %p and its refcnt is %ld\n", 
+          "  - hash at %p and its refcnt is %ld", 
 	  hashReferent, 
 	  SvREFCNT(hashReferent)
 	)
@@ -115,7 +117,7 @@ SV *NsConnOutputMap(Ns_Conn *var, char *class)
       hashReferent, 
       "headers", 
       7, 
-      NsSetOutputMap(var->headers, "Aolserver::Ns_Set"),
+      NsSetOutputMap(var->headers, "Aolserver::Ns_Set", perlDoesntOwn),
       0
     );
 
@@ -124,7 +126,7 @@ SV *NsConnOutputMap(Ns_Conn *var, char *class)
       hashReferent, 
       "outputheaders", 
       13, 
-      NsSetOutputMap(var->outputheaders, "Aolserver::Ns_Set"),
+      NsSetOutputMap(var->outputheaders, "Aolserver::Ns_Set", perlDoesntOwn),
       0
     );
 
@@ -133,13 +135,37 @@ SV *NsConnOutputMap(Ns_Conn *var, char *class)
       hashReferent, 
       "request", 
       7, 
-      NsRequestOutputMap(var->request, "Aolserver::Ns_Request"),
+      NsRequestOutputMap(var->request, "Aolserver::Ns_Request", perlDoesntOwn),
+      0
+    );
+
+  hv_store
+    (
+      hashReferent, 
+      "perlOwns", 
+      8, 
+      (perlOwns ? (&PL_sv_yes) : (&PL_sv_no)),
       0
     );
 
   sv_bless(arg, gv_stashpv(class, TRUE));
 
   return arg;
+}
+
+int NsConnOwnedP(SV *connPerlRef)
+{
+  dTHX;
+  SV **hashValue = hv_fetch( (HV*)SvRV(connPerlRef), "perlOwns", 8, FALSE);
+  SV *perlOwns = ((hashValue != NULL) ? *hashValue : &PL_sv_yes);
+  int result = 0;
+
+  if(perlOwns == &PL_sv_yes)
+    result = 1;
+  else 
+    result = 0;
+
+  return result;
 }
 
 // outputs the stored ref to the Ns_Set, takes the ref to the conn as input
@@ -161,20 +187,6 @@ SV *NsConnGetHeaders(SV *connPerlRef)
     );
 
   return result;
-}
-
-void NsConnMakeNull(SV *connPerlRef)
-{
-  dTHX;
-  SV **hashValue = hv_fetch( (HV*)SvRV(connPerlRef), "theNs_Conn", 10, FALSE);
-  SV *connIV = ((hashValue != NULL) ? *hashValue : 0);
-
-  if(connIV)
-    sv_setiv(connIV, 0);
-
-  NsSetMakeNull( NsConnGetHeaders(connPerlRef) );
-  NsSetMakeNull( NsConnGetOutputHeaders(connPerlRef) );
-  NsRequestMakeNull( NsConnGetRequest(connPerlRef) );
 }
 
 // outputs the stored ref to the Ns_Set, takes the ref to the conn as input

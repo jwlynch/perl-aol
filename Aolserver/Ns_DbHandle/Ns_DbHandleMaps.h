@@ -7,17 +7,17 @@
 
 #include "ns.h"
 
-Ns_DbHandle *NsDbHandleInputMap(SV *arg);
-int NsDbHandleIsNull(SV *arg);
-void NsDbHandleMakeNull(SV *arg);
-SV *NsDbHandleOutputMap(Ns_DbHandle *var, char *class);
+#include "AolserverCommon.h"
+
+Ns_DbHandle *NsDbHandleInputMap(SV *arg, char *class, char *varName);
+SV *NsDbHandleOutputMap(Ns_DbHandle *var, char *class, int perlOwns);
+void NsDbHandleSetSelectLoopFlag(SV *dbHandlePerlRef, int isInSelectLoop);
+
 SV *NsDbHandleGetSelectRow(SV *dbHandlePerlRef);
 void NsDbHandleStoreSelectRow(SV *dbHandlePerlRef, Ns_Set *selectRowSet);
 int NsDbHandleIsInSelectLoop(SV *dbHandlePerlRef);
 int NsDbHandleSameAsSelectRow(SV *dbHandlePerlRef, SV *nsSetPerlRef);
 
-//SV *GetHeaders(SV *connPerlRef);
-//SV *GetOutputHeaders(SV *connPerlRef);
-//SV *GetRequest(SV *connPerlRef);
+int NsDbHandleOwnedP(SV *dbHandlePerlRef);
 
 #endif

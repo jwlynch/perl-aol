@@ -32,12 +32,12 @@ new(class)
 	theSet = Ns_SetCreate("");
 	if (theSet)
 	{
-	    RETVAL = sv_2mortal( NsSetOutputMap(theSet, class) );
+	    RETVAL = sv_2mortal( NsSetOutputMap(theSet, class, perlDoesOwn) );
 	    LOG
 	      (
 	        StringF
                   (
-                    "  - new Ns_Set %p wrapped in output mapping at %p\n",
+                    "  - new Ns_Set %p wrapped in output mapping at %p",
                     theSet,
                     RETVAL
                   )
@@ -45,7 +45,7 @@ new(class)
 	}
 	else
 	{
-	    LOG(StringF("  - new Ns_Set could not be created by aolserver\n"));
+	    LOG(StringF("  - new Ns_Set could not be created by aolserver"));
 	    RETVAL = &PL_sv_undef;
 	}
     OUTPUT:	
@@ -61,7 +61,7 @@ newNamed(class, name)
 	theSet = Ns_SetCreate(name);
 	if (theSet)
 	{
-	    RETVAL = sv_2mortal( NsSetOutputMap(theSet, class) );
+	    RETVAL = sv_2mortal( NsSetOutputMap(theSet, class, perlDoesOwn) );
 	}
 	else
 	{
@@ -228,19 +228,16 @@ Update(self, key, value)
 void
 DESTROY(self)
 	SV *	self
-    PREINIT:
-	SV *sviv = SvRV(self);
     CODE:
-	LOG(StringF("Ns_Set::DESTROY(%p) (refs to %p) called:", self, sviv));
-	if(! NsSetIsNull(self))
+	LOG(StringF("Ns_Set::DESTROY(%p) called:", self));
+	if(NsSetOwnedP(self))
 	{
 	  Ns_Set *tmp = NsSetInputMap(self, "Aolserver::Ns_Set", "self");
     	  Ns_SetFree(tmp);
-	  NsSetMakeNull(self);
-	  LOG(StringF("  - NOT null. freeing set at %p.", tmp));
+	  LOG(StringF("  - perl DOES own this. freeing set at %p.", tmp));
 	}
 	else
 	{
-	  LOG(StringF("  - IS null. NOT freeing."));
+	  LOG(StringF("  - perl does NOT own this. NOT freeing."));
 	}
 

@@ -747,3 +747,4 @@ DESTROY(connPerlRef)
 	SV *	connPerlRef
     CODE:
         LOG(StringF("DESTROY Ns_Conn at %p\n", connPerlRef));
+	// would test perlOwns here, but...

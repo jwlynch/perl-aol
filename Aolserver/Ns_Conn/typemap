@@ -6,4 +6,4 @@ T_Ns_Conn
 
 OUTPUT
 T_Ns_Conn
-	$arg = NsConnOutputMap($var, \"Aolserver::Ns_Conn\");
+	$arg = NsConnOutputMap($var, \"Aolserver::Ns_Conn\", perlDoesOwn);

@@ -3,11 +3,21 @@ Ns_DbHandle*	T_Ns_DbHandle
 INPUT
 T_Ns_DbHandle
 	if (sv_derived_from($arg, \"Aolserver::Ns_DbHandle\")) {
- 	    $var = NsDbHandleInputMap($arg);
+ 	    $var = NsDbHandleInputMap
+                     (
+                       $arg, 
+                       \"Aolserver::Ns_DbHandle\", 
+                       \"$arg\"
+                     );
 	}
 	else
 	    croak(\"$var is not of type Aolserver::Ns_DbHandle\")
 
 OUTPUT
 T_Ns_DbHandle
-	$arg = NsDbHandleOutputMap($var, \"Aolserver::Ns_DbHandle\");
+	$arg = NsDbHandleOutputMap
+                 (
+                   $var, 
+                   \"Aolserver::Ns_DbHandle\", 
+                   perlDoesOwn
+                 );

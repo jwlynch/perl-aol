@@ -2,8 +2,6 @@
 #include "perl.h"
 #include "XSUB.h"
 
-#include "logging.h"
-
 #include <nsthread.h>
 #include <tcl.h>
 #include <ns.h>
@@ -13,6 +11,10 @@
 #include "Ns_DbHandleMaps.h"
 #include "../Ns_DString/Ns_DStringMaps.h"
 #include "../Ns_Set/Ns_SetMaps.h"
+
+#include "logging.h"
+
+#include "AolserverCommon.h"
 
 static int
 not_here(char *s)
@@ -31,13 +33,22 @@ new(class, pool)
 	RETVAL = Ns_DbPoolGetHandle(pool);
 	if (RETVAL)
 	{
-	    ST(0) = sv_2mortal( NsDbHandleOutputMap(RETVAL, class) );
-            LOG(StringF("Ns_DbHandle allocated\n"));
+	    ST(0) = sv_2mortal
+                      (
+                        NsDbHandleOutputMap
+                          (
+                            RETVAL, 
+                            class, 
+                            perlDoesOwn
+                          ) 
+                      );
+
+            LOG(StringF("Ns_DbHandle allocated"));
 	}
 	else
 	{
 	    ST(0) = &PL_sv_undef;
-            LOG(StringF("Ns_DbHandle could not be allocated\n"));
+            LOG(StringF("Ns_DbHandle could not be allocated"));
 	}
 
 
@@ -47,13 +58,18 @@ GetOneRowAtMost(handlePerlRef, sql, nrows)
 	char *		sql
 	int		nrows
     PREINIT:
-	Ns_DbHandle *handle = NsDbHandleInputMap(handlePerlRef);
+	Ns_DbHandle *handle = NsDbHandleInputMap
+                                (
+                                  handlePerlRef,
+                                  "Aolserver::Ns_DbHandle",
+                                  "handlePerlRef"
+                                );
     CODE:
 	if(NsDbHandleIsInSelectLoop(handlePerlRef))
 	{
 	  RETVAL = NULL;
 	  Ns_DbCancel(handle);
-	  NsDbHandleStoreSelectRow(handlePerlRef, (Ns_Set *) NULL);
+	  NsDbHandleSetSelectLoopFlag(handlePerlRef, 0);
 	}
 	else
 	{
@@ -68,13 +84,18 @@ GetOneRow(handlePerlRef, sql)
 	SV *	handlePerlRef
 	char *		sql
     PREINIT:
-	Ns_DbHandle *handle = NsDbHandleInputMap(handlePerlRef);
+	Ns_DbHandle *handle = NsDbHandleInputMap
+                                (
+                                  handlePerlRef,
+                                  "Aolserver::Ns_DbHandle",
+                                  "handlePerlRef"
+                                );
     CODE:
 	if(NsDbHandleIsInSelectLoop(handlePerlRef))
 	{
 	  RETVAL = NULL;
 	  Ns_DbCancel(handle);
-	  NsDbHandleStoreSelectRow(handlePerlRef, (Ns_Set *) NULL);
+          NsDbHandleSetSelectLoopFlag(handlePerlRef, 0);
 	}
 	else
 	{
@@ -95,12 +116,17 @@ int
 Cancel(handlePerlRef)
 	SV *	handlePerlRef
     PREINIT:
-	Ns_DbHandle *handle = NsDbHandleInputMap(handlePerlRef);
+	Ns_DbHandle *handle = NsDbHandleInputMap
+                                (
+                                  handlePerlRef,
+                                  "Aolserver::Ns_DbHandle",
+                                  "handlePerlRef"
+                                );
     CODE:
 	if(NsDbHandleIsInSelectLoop(handlePerlRef))
 	{
 	  RETVAL = Ns_DbCancel(handle);
-	  NsDbHandleStoreSelectRow(handlePerlRef, (Ns_Set *) NULL);
+	  NsDbHandleSetSelectLoopFlag(handlePerlRef, 0);
 	}
 	else
 	{
@@ -114,13 +140,18 @@ ExecDML(handlePerlRef, sql)
 	SV *	handlePerlRef
 	char *		sql
     PREINIT:
-	Ns_DbHandle *handle = NsDbHandleInputMap(handlePerlRef);
+	Ns_DbHandle *handle = NsDbHandleInputMap
+                                (
+                                  handlePerlRef,
+                                  "Aolserver::Ns_DbHandle",
+                                  "handlePerlRef"
+                                );
     CODE:
 	if(NsDbHandleIsInSelectLoop(handlePerlRef))
 	{
 	  RETVAL = NS_ERROR;
 	  Ns_DbCancel(handle);
-	  NsDbHandleStoreSelectRow(handlePerlRef, (Ns_Set *) NULL);
+	  NsDbHandleSetSelectLoopFlag(handlePerlRef, 0);
 	}
 	else
 	{
@@ -142,16 +173,22 @@ int
 Flush(handlePerlRef)
 	SV *	handlePerlRef
     PREINIT:
-	Ns_DbHandle *handle = NsDbHandleInputMap(handlePerlRef);
+	Ns_DbHandle *handle = NsDbHandleInputMap
+                                (
+                                  handlePerlRef,
+                                  "Aolserver::Ns_DbHandle",
+                                  "handlePerlRef"
+                                );
     CODE:
 	if(NsDbHandleIsInSelectLoop(handlePerlRef))
 	{
 	  RETVAL = Ns_DbFlush(handle);
-	  NsDbHandleStoreSelectRow(handlePerlRef, (Ns_Set *) NULL);
+	  NsDbHandleSetSelectLoopFlag(handlePerlRef, 0);
 	}
 	else
 	{
 	  RETVAL = NS_OK; // you can call Flush as many times as you want
+                          // (however, once is enough :)
 	}
     OUTPUT:
 	RETVAL
@@ -161,7 +198,12 @@ GetRow(handlePerlRef, rowPerlRef)
 	SV *	handlePerlRef
 	SV *	rowPerlRef
     PREINIT:
-	Ns_DbHandle *handle = NsDbHandleInputMap(handlePerlRef);
+	Ns_DbHandle *handle = NsDbHandleInputMap
+                                (
+                                  handlePerlRef,
+                                  "Aolserver::Ns_DbHandle",
+                                  "handlePerlRef"
+                                );
 	Ns_Set *row = 
 	    NsSetInputMap
 		(
@@ -185,7 +227,7 @@ GetRow(handlePerlRef, rowPerlRef)
 	    //      so make perl forget about it.
 
 	    if(RETVAL == NS_END_DATA || RETVAL == NS_ERROR)
-	      NsDbHandleStoreSelectRow(handlePerlRef, NULL);
+	      NsDbHandleSetSelectLoopFlag(handlePerlRef, 0);
 	  }
     OUTPUT:
 	RETVAL
@@ -220,7 +262,12 @@ Select(handlePerlRef, sql)
 	SV *	handlePerlRef
 	char *	sql
     PREINIT:
-	Ns_DbHandle *handle = NsDbHandleInputMap(handlePerlRef);
+	Ns_DbHandle *handle = NsDbHandleInputMap
+                                (
+                                  handlePerlRef,
+                                  "Aolserver::Ns_DbHandle",
+                                  "handlePerlRef"
+                                );
     CODE:
 	RETVAL = &PL_sv_undef;
 
@@ -236,13 +283,14 @@ Select(handlePerlRef, sql)
 	    {
 	      selectRow = Ns_DbSelect(handle, sql);
 	      NsDbHandleStoreSelectRow(handlePerlRef, selectRow);
+              NsDbHandleSetSelectLoopFlag(handlePerlRef, 1);
 	      RETVAL = 
                 sv_mortalcopy( NsDbHandleGetSelectRow(handlePerlRef) );
 	    }
 	  else
 	    {
 	      Ns_DbCancel(handle);
-	      NsDbHandleStoreSelectRow(handlePerlRef, (Ns_Set *) NULL);
+              NsDbHandleSetSelectLoopFlag(handlePerlRef, 0);
 	    }
 	}
     OUTPUT:
@@ -252,11 +300,15 @@ void
 DESTROY(handlePerlRef)
 	SV *	handlePerlRef
     PREINIT:
-	Ns_DbHandle *handle = NsDbHandleInputMap(handlePerlRef);
+	Ns_DbHandle *handle = NsDbHandleInputMap
+                                (
+                                  handlePerlRef,
+                                  "Aolserver::Ns_DbHandle",
+                                  "handlePerlRef"
+                                );
     CODE:
 	if(NsDbHandleIsInSelectLoop(handlePerlRef))
 	{
-	  NsDbHandleStoreSelectRow(handlePerlRef, (Ns_Set *) NULL);
 	  Ns_DbCancel(handle);
 	}
 	

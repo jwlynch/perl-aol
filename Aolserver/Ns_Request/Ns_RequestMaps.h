@@ -7,11 +7,11 @@
 
 #include "ns.h"
 
-Ns_Request *NsRequestInputMap(SV *arg);
-SV *NsRequestOutputMap(Ns_Request *var, char *class);
+#include "AolserverCommon.h"
 
-int NsRequestIsNull(SV *arg);
-void NsRequestMakeNull(SV *arg);
-void NsRequestStore(SV *requestPerlRef, Ns_Request *request);
+int NsRequestOwnedP(SV *requestPerlRef);
+
+Ns_Request *NsRequestInputMap(SV *arg, char *class, char *varName);
+SV *NsRequestOutputMap(Ns_Request *var, char *class, int perlOwns);
 
 #endif

@@ -34,7 +34,7 @@
  *
  */
 
-static const char *RCSID = "@(#) $Header: /home/jim/perl-aol-cvs-repo-backups/perl-aol/nsperl/nsperl.c,v 1.17 2002/12/03 09:47:15 jwl Exp $, compiled: " __DATE__ " " __TIME__;
+static const char *RCSID = "@(#) $Header: /home/jim/perl-aol-cvs-repo-backups/perl-aol/nsperl/nsperl.c,v 1.18 2002/12/05 02:28:06 jwl Exp $, compiled: " __DATE__ " " __TIME__;
 
 #include "ns.h"
 
@@ -210,7 +210,12 @@ int do_perl(void *context, Ns_Conn *conn)
 	  {
 	    SV *varPtr = get_sv("Aolserver::Ns_Conn::theConn", TRUE | GV_ADDMULTI);
 
-	    connPerlRef = NsConnOutputMap(conn, "Aolserver::Ns_Conn");
+	    connPerlRef = NsConnOutputMap
+                            (
+                              conn, 
+                              "Aolserver::Ns_Conn", 
+			      perlDoesntOwn
+			    );
 
 	    sv_setsv
 	      (
@@ -222,20 +227,58 @@ int do_perl(void *context, Ns_Conn *conn)
 LOG(StringF("varPtr => %ld (expect 1)\n", SvREFCNT(varPtr)));
 LOG(StringF("connPerlRef => %ld (expect 1)\n", SvREFCNT(connPerlRef)));
 LOG(StringF("%%{varPtr} => %ld (expect 2)\n", SvREFCNT(SvRV(varPtr))));
-            SvREFCNT_dec(SvRV(varPtr)); /* done with this */
+
+            SvREFCNT_dec(SvRV(varPtr));
+
 LOG(StringF("%%{varPtr} => %ld (expect 1)\n", SvREFCNT(SvRV(varPtr))));
-LOG(StringF("connPerlRef => %ld (expect ???)\n", SvREFCNT(connPerlRef)));
+LOG(StringF("connPerlRef => %ld (hope 1)\n", SvREFCNT(connPerlRef)));
 	  }
 #endif
 
 	  LOG(StringF("before running perl interp\n"));
 	  perl_run(aTHX);
 	  LOG(StringF("after running perl interp\n"));
-	  NsConnMakeNull(connPerlRef); // explicitly tear the conn out
 	  perl_destruct(aTHX);
 	  LOG(StringF("after destroying perl interp\n"));
 	  perl_free(aTHX);
 	  LOG(StringF("after freeing perl interp\n"));
+	  
+	  if(! Ns_ConnContentSent(conn))
+	    {
+	      Ns_DString sendMe;
+	      char *sendStr;
+	      /* the perl interpreter could not be allocated */
+	      
+	      Ns_DStringInit(&sendMe);
+	      
+	      Ns_DStringAppend(&sendMe, "<html>\n");
+	      Ns_DStringAppend(&sendMe, "  <head>\n");
+
+	      Ns_DStringAppend
+                (
+		  &sendMe, 
+		  "    <title>406: script didn't return content</title>\n"
+		);
+
+	      Ns_DStringAppend(&sendMe, "  </head>\n");
+	      Ns_DStringAppend(&sendMe, "  <body>\n");
+
+	      Ns_DStringAppend
+		(
+		  &sendMe, 
+		  "    <h1>406:</h1> script didn't return content\n"
+		);
+
+	      Ns_DStringAppend(&sendMe, "(perhaps an error terminated\n");
+	      Ns_DStringAppend(&sendMe, "the script early. See the log.)\n");
+	      Ns_DStringAppend(&sendMe, "  </body>\n");
+	      Ns_DStringAppend(&sendMe, "</html>\n");
+	      
+	      sendStr = Ns_DStringValue(&sendMe);
+	      
+	      Ns_ConnReturnHtml(conn, 406, sendStr, -1);
+	      result = NS_ERROR;
+	    }
 	}
       else
 	{
