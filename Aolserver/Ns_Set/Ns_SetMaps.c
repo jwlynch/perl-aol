@@ -7,9 +7,9 @@
 
 #include "Ns_SetMaps.h"
 
-#include </usr/local/aolserver/include/nsthread.h>
-#include </usr/local/aolserver/include/tcl.h>
-#include </usr/local/aolserver/include/ns.h>
+#include <nsthread.h>
+#include <tcl.h>
+#include <ns.h>
 
 #include <stdio.h>
 
