@@ -1,0 +1,13 @@
+Ns_Set *	T_Ns_Set
+
+INPUT
+T_Ns_Set
+	if (sv_derived_from($arg, \"Aolserver::Ns_Set\")) {
+	    $var = NsSetInputMap($arg);
+	}
+	else
+	    croak(\"$var is not of type Aolserver::Ns_Set\")
+
+OUTPUT
+T_Ns_Set
+	$arg = NsSetOutputMap($var, \"Aolserver::Ns_Set\");
