@@ -1,0 +1,49 @@
+# made a backup, for the purpose of having a local copy
+rsync -av rsync://perl-aol.cvs.sourceforge.net/cvsroot/perl-aol/* .
+
+# create dumpfile and blobfile of the perl-aol cvs repo
+cvs2git  --username jim --blobfile=../cvs2git-tmp/git-blob.dat --dumpfile=../cvs2git-tmp/git-dump.dat  ../perl-aol-cvs-repo-backups/perl-aol/
+
+# (dangerous) remove perl-aol cvs repo from sourceforge
+(go to sourceforge, then to admin and tools)
+(delete the cvs repo, label Code, url code)
+
+# make an empty git repo on label Code, url code
+
+# clone that new empty repo so I have a new, bare, empty git repo
+git clone --bare ssh://jwl@git.code.sf.net/p/perl-aol/code perl-aol-code
+
+# read the dump file and blob file made above into new repo
+cat ../cvs2git-tmp/git-blob.dat ../cvs2git-tmp/git-dump.dat | git fast-import
+
+# correct commit authors:
+# make a script, which we called jwl-filter-branch.sh:
+QUOTE
+#!/bin/sh
+
+git filter-branch -f --env-filter '
+
+n=$GIT_AUTHOR_NAME
+m=$GIT_AUTHOR_EMAIL
+
+case ${GIT_AUTHOR_NAME} in
+        jwl) n="Jim Lynch" ; m="jwl@users.sourceforge.net" ;;
+        "jim") n="Jim Lynch" ; m="jwl@users.sourceforge.net" ;;
+esac
+
+export GIT_AUTHOR_NAME="$n"
+export GIT_AUTHOR_EMAIL="$m"
+export GIT_COMMITTER_NAME="$n"
+export GIT_COMMITTER_EMAIL="$m"
+'
+UNQUOTE
+
+# run that script, cwd should be in the bare repo dir
+sh ../jwl-filter-branch.sh
+
+# look at it
+gitk
+
+# looks good? push it
+git push origin master
+
