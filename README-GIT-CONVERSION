@@ -3,6 +3,7 @@ rsync -av rsync://perl-aol.cvs.sourceforge.net/cvsroot/perl-aol/* .
 
 # create dumpfile and blobfile of the perl-aol cvs repo
 cvs2git  --username jim --blobfile=../cvs2git-tmp/git-blob.dat --dumpfile=../cvs2git-tmp/git-dump.dat  ../perl-aol-cvs-repo-backups/perl-aol/
+# http://cvs2svn.tigris.org/cvs2git.html#usage
 
 # (dangerous) remove perl-aol cvs repo from sourceforge
 (go to sourceforge, then to admin and tools)
@@ -17,6 +18,7 @@ git clone --bare ssh://jwl@git.code.sf.net/p/perl-aol/code perl-aol-code
 cat ../cvs2git-tmp/git-blob.dat ../cvs2git-tmp/git-dump.dat | git fast-import
 
 # correct commit authors:
+# http://stackoverflow.com/questions/392332/retroactively-correct-authors-with-git-svn
 # make a script, which we called jwl-filter-branch.sh:
 QUOTE
 #!/bin/sh
