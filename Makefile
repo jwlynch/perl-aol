@@ -6,7 +6,7 @@ export LIBPERL       := libperl.so
 export PERLMODDIR    := /home/jim/c/perl-aol-workbench/perl-modules
 export PERLMODLIBDIR := $(PERLMODDIR)/lib
 
-export NSHOME    := /home/jim/c/perl-aol-workbench/aolserver/aols-inst
+export NSHOME    := /home/jim/aols-git-inst
 export NSINCLUDE := $(NSHOME)/include
 
 PERLMODULES := Ns_Conn Ns_DbHandle Ns_DString Ns_Request Ns_Set
