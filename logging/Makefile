@@ -1,7 +1,7 @@
 
 INCLUDE = ../include
 
-CFLAGS = -I$(INCLUDE)
+CFLAGS = -I$(INCLUDE) -fPIC
 
 
 all: logging.o
