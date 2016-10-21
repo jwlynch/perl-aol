@@ -3,7 +3,7 @@ export PERL          := /usr/bin/perl
 export PERLCONFIG    := $(PERL) $(PERL_AOL)/perl-config
 export LIBPERL       := libperl.so
 
-export PERLMODDIR    := /home/jim/c/perl-aol-workbench/perl-modules
+export PERLMODDIR    := /home/jim/perl/perl-aol/perl-modules
 export PERLMODLIBDIR := $(PERLMODDIR)/lib
 
 export NSHOME    := /home/jim/aols-git-inst
